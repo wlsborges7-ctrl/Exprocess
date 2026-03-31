@@ -7,7 +7,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
-
 const PORT = Number(process.env.PORT || 10000);
 
 const defaultUsers = [
@@ -20,16 +19,9 @@ const defaultUsers = [
     ativo: true,
     mustChangePassword: false,
     permissions: {
-      canEmployees: true,
-      canOccurrences: true,
-      canProcesses: true,
-      canTerminations: true,
-      canReports: true,
-      canManageUsers: true,
-      processControl: true,
-      canHrDispatch: true,
-      canLegalDispatch: true,
-      canConclusiveDecision: true
+      canEmployees: true, canOccurrences: true, canProcesses: true, canTerminations: true,
+      canReports: true, canManageUsers: true, processControl: true,
+      canHrDispatch: true, canLegalDispatch: true, canConclusiveDecision: true
     }
   },
   {
@@ -41,16 +33,9 @@ const defaultUsers = [
     ativo: true,
     mustChangePassword: false,
     permissions: {
-      canEmployees: true,
-      canOccurrences: true,
-      canProcesses: true,
-      canTerminations: true,
-      canReports: true,
-      canManageUsers: false,
-      processControl: true,
-      canHrDispatch: false,
-      canLegalDispatch: false,
-      canConclusiveDecision: true
+      canEmployees: true, canOccurrences: true, canProcesses: true, canTerminations: true,
+      canReports: true, canManageUsers: false, processControl: true,
+      canHrDispatch: false, canLegalDispatch: false, canConclusiveDecision: true
     }
   },
   {
@@ -62,16 +47,9 @@ const defaultUsers = [
     ativo: true,
     mustChangePassword: false,
     permissions: {
-      canEmployees: true,
-      canOccurrences: true,
-      canProcesses: true,
-      canTerminations: true,
-      canReports: true,
-      canManageUsers: false,
-      processControl: true,
-      canHrDispatch: true,
-      canLegalDispatch: false,
-      canConclusiveDecision: false
+      canEmployees: true, canOccurrences: true, canProcesses: true, canTerminations: true,
+      canReports: true, canManageUsers: false, processControl: true,
+      canHrDispatch: true, canLegalDispatch: false, canConclusiveDecision: false
     }
   },
   {
@@ -83,16 +61,9 @@ const defaultUsers = [
     ativo: true,
     mustChangePassword: false,
     permissions: {
-      canEmployees: false,
-      canOccurrences: false,
-      canProcesses: true,
-      canTerminations: false,
-      canReports: true,
-      canManageUsers: false,
-      processControl: true,
-      canHrDispatch: false,
-      canLegalDispatch: true,
-      canConclusiveDecision: false
+      canEmployees: false, canOccurrences: false, canProcesses: true, canTerminations: false,
+      canReports: true, canManageUsers: false, processControl: true,
+      canHrDispatch: false, canLegalDispatch: true, canConclusiveDecision: false
     }
   }
 ];
@@ -100,7 +71,7 @@ const defaultUsers = [
 const state = {
   meta: {
     appName: "ExceProcess",
-    version: "1.0.0-demo",
+    version: "2.0.0-demo",
     revision: 1,
     updatedAt: new Date().toISOString()
   },
@@ -206,5 +177,5 @@ if (fs.existsSync(distDir)) {
 
 app.listen(PORT, () => {
   console.log(`EXCEPROCESS DEMO no ar na porta ${PORT}`);
-  console.log("Base demo em memória (sem persistência)");
+  console.log("Base demo em memória (sem persistência definitiva)");
 });

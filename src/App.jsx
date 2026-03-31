@@ -1,13 +1,17 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { BRANDING } from "./config/branding.js";
+import { DEMO_STATE } from "./config/demoData.js";
+import { DEMO_MODE } from "./config/demo.js";
 
 const STORAGE_KEYS = {
-  employees: "glink_v7_employees",
-  occurrences: "glink_v7_occurrences",
-  processes: "glink_v7_processes",
-  page: "glink_v22_page",
-  attachments: "glink_v22_attachments",
-  terminations: "glink_v22_terminations"
+  employees: `${BRANDING.storagePrefix}_employees`,
+  occurrences: `${BRANDING.storagePrefix}_occurrences`,
+  processes: `${BRANDING.storagePrefix}_processes`,
+  page: `${BRANDING.storagePrefix}_page`,
+  attachments: `${BRANDING.storagePrefix}_attachments`,
+  terminations: `${BRANDING.storagePrefix}_terminations`,
+  users: `${BRANDING.storagePrefix}_users`
 };
 
 const API_BASE = import.meta.env.VITE_API_BASE || "/api";
@@ -38,9 +42,9 @@ const JUST_CAUSE_OPTIONS = [
 const DOCUMENT_ACCEPT = ".pdf,.png,.jpg,.jpeg,.webp";
 
 const defaultUsers = [
-  { id: 1, nome: "William Borges", usuario: "admin", perfil: "Administrador", senha: "Glink@Admin#8427", ativo: true },
-  { id: 2, nome: "Gestor 1", usuario: "gestor1", perfil: "Gestor", senha: "Glink@Gestor#5184", ativo: true },
-  { id: 3, nome: "Gestor 2", usuario: "gestor2", perfil: "Gestor", senha: "Glink@Gestor#9031", ativo: true }
+  { id: 1, nome: "William Borges", usuario: "admin", perfil: "Administrador", senha: "Exce@Admin#8427", ativo: true },
+  { id: 2, nome: "Gestor 1", usuario: "gestor1", perfil: "Gestor", senha: "Exce@Gestor#5184", ativo: true },
+  { id: 3, nome: "Gestor 2", usuario: "gestor2", perfil: "Gestor", senha: "Exce@Gestor#9031", ativo: true }
 ];
 
 
@@ -153,7 +157,7 @@ const defaultEmployees = [
     gestor: "Ricardo Gomes",
     status: "Ativo",
     admissao: "2024-03-10",
-    email: "carlos@glink.com.br",
+    email: "carlos@exceprocess.com.br",
     celular: "(21) 99999-0001",
     cep: "21000-000",
     endereco: "Rua Alfa",
@@ -175,7 +179,7 @@ const defaultEmployees = [
     gestor: "Patrícia Costa",
     status: "Ativo",
     admissao: "2023-09-18",
-    email: "fernanda@glink.com.br",
+    email: "fernanda@exceprocess.com.br",
     celular: "(21) 99999-0002",
     cep: "22000-000",
     endereco: "Rua Beta",
@@ -197,7 +201,7 @@ const defaultEmployees = [
     gestor: "Diretoria Operacional",
     status: "Afastado",
     admissao: "2022-01-08",
-    email: "marcos@glink.com.br",
+    email: "marcos@exceprocess.com.br",
     celular: "(21) 99999-0003",
     cep: "25000-000",
     endereco: "Rua Gama",
@@ -440,7 +444,7 @@ export default function App() {
   const [selectedProcessId, setSelectedProcessId] = useState(null);
   const [users, setUsers] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.users, defaultUsers), defaultUsers));
   const [session, setSession] = useState(() => loadStorage(STORAGE_KEYS.session, null));
-  const [authUser, setAuthUser] = useState(() => loadStorage("glink_v35_auth_user", null));
+  const [authUser, setAuthUser] = useState(() => loadStorage(`${BRANDING.storagePrefix}_auth_user`, null));
   const [loginForm, setLoginForm] = useState({ usuario: "", senha: "" });
   const [passwordChangeForm, setPasswordChangeForm] = useState({ senha: "", confirmar: "" });
   const [loginError, setLoginError] = useState("");
@@ -511,7 +515,7 @@ export default function App() {
     outras: { titulo: "" }
   });
 
-  const [attachments, setAttachments] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.attachments, []), []));
+  const [attachments, setAttachments] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.attachments, DEMO_STATE.attachments), DEMO_STATE.attachments));
   const [previewAttachment, setPreviewAttachment] = useState(null);
   const [movementAttachmentDrafts, setMovementAttachmentDrafts] = useState({});
   const [attachmentLinkDrafts, setAttachmentLinkDrafts] = useState({});
@@ -528,7 +532,7 @@ export default function App() {
     sintese: "",
     normaViolada: ""
   });
-  const [terminations, setTerminations] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.terminations, []), []));
+  const [terminations, setTerminations] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.terminations, DEMO_STATE.terminations), DEMO_STATE.terminations));
   const [quickEventDrafts, setQuickEventDrafts] = useState({});
   const [movementType, setMovementType] = useState("Movimentação");
   const [movementText, setMovementText] = useState("");
@@ -1799,18 +1803,29 @@ Despacho conclusivo.`;
   }
 
   function resetDemoData() {
-    const ok = window.confirm("Isso vai restaurar os dados de demonstração e apagar o que foi cadastrado localmente. Deseja continuar?");
-    if (!ok) return;
-    setEmployees(defaultEmployees);
-    setOccurrences(defaultOccurrences);
-    setProcesses(defaultProcesses);
-    setAttachments([]);
-    setTerminations([]);
+    [
+      STORAGE_KEYS.employees,
+      STORAGE_KEYS.occurrences,
+      STORAGE_KEYS.processes,
+      STORAGE_KEYS.attachments,
+      STORAGE_KEYS.terminations,
+      STORAGE_KEYS.users,
+      `${BRANDING.storagePrefix}_user`,
+      `${BRANDING.storagePrefix}_auth_user`
+    ].forEach((key) => localStorage.removeItem(key));
+
+    setUsers(structuredClone(DEMO_STATE.users));
+    setEmployees(structuredClone(DEMO_STATE.employees));
+    setOccurrences(structuredClone(DEMO_STATE.occurrences));
+    setProcesses(structuredClone(DEMO_STATE.processes));
+    setAttachments(structuredClone(DEMO_STATE.attachments));
+    setTerminations(structuredClone(DEMO_STATE.terminations));
     setSelectedProcessId(null);
-    setExpandedEmployeeIds([]);
-    setExpandedOccurrenceIds([]);
     setExpandedProcessIds([]);
     setActivePage("Dashboard");
+    setCurrentUser(null);
+    setSession(null);
+    window.location.reload();
   }
 
 
@@ -1909,12 +1924,12 @@ async function pushSnapshot() {
           <div className="login-brand">
             <div className="brand-mark">G</div>
             <div>
-              <strong>Glink Process</strong>
+              <strong>{BRANDING.appName}</strong>
               <span>Acesso interno sincronizado</span>
             </div>
           </div>
           <h1>Entrar no sistema</h1>
-          <p>Use seu usuário e senha para acessar o ambiente interno da GLINK.</p>
+          <p>Use seu usuário e senha para acessar o ambiente interno da {BRANDING.legalName}.</p>
           <form className="login-form" onSubmit={handleLogin}>
             <input placeholder="Usuário" value={loginForm.usuario} onChange={(e) => setLoginForm({ ...loginForm, usuario: e.target.value })} />
             <div className="password-wrap">
@@ -2393,6 +2408,7 @@ function renderOccurrenceSpecificFields() {
     return (
       <>
         <header className="hero">
+          {DEMO_MODE ? <div className="demo-badge">MODO DEMONSTRAÇÃO</div> : null}
           <div>
             <h1>Dashboard</h1>
             <p>Indicadores visuais de pessoal e andamento operacional para a versão de entrega local.</p>
@@ -3549,7 +3565,7 @@ function renderOccurrenceSpecificFields() {
         <div className="brand">
           <div className="brand-mark">G</div>
           <div>
-            <strong>Glink Process</strong>
+            <strong>{BRANDING.appName}</strong>
             <span>Gestão administrativa interna</span>
           </div>
         </div>
@@ -3568,7 +3584,7 @@ function renderOccurrenceSpecificFields() {
         </div>
 
         {currentUser?.perfil === "Administrador" ? (
-          <button className="btn secondary full-btn" onClick={resetDemoData}>Restaurar demo</button>
+          <button className="btn secondary full-btn" onClick={resetDemoData}>Resetar demonstração</button>
         ) : null}
         <button className="btn ghost full-btn" onClick={handleLogout}>Sair</button>
       </aside>

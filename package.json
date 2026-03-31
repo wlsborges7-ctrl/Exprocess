@@ -1,6 +1,6 @@
 {
   "name": "exceprocess-demo",
-  "version": "1.0.0-demo",
+  "version": "2.0.0-demo",
   "private": true,
   "type": "module",
   "scripts": {

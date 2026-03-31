@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: glink-process
+    name: exceprocess-demo
     env: node
     plan: starter
     buildCommand: npm install --include=dev && npm run build

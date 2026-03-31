@@ -1,4 +1,4 @@
-# Glink Process v7
+# ExceProcess v7
 
 Ajustes aplicados:
 - dashboard com gráficos visuais
@@ -44,7 +44,7 @@ Ajustes aplicados:
 - botões rápidos do fluxo do PAI: notificação, defesa inicial, defesa final e relatório
 - nova categoria Demanda interna com prioridade, prazo e unidade responsável
 
-- relatórios gerados com marca d'água GLINK
+- relatórios gerados com marca d'água EXCEPROCESS
 
 
 ## v22 — versão fechada para evolução
@@ -83,16 +83,16 @@ Os documentos desta versão ficam no armazenamento local do navegador, com limit
 Entrou nesta versão:
 - tela de login
 - 3 acessos iniciais:
-  - admin / Glink@Admin#8427
-  - gestor1 / Glink@Gestor#5184
-  - gestor2 / Glink@Gestor#9031
+  - admin / Demo@123
+  - gestor1 / Demo@123
+  - gestor2 / Demo@123
 - identificação do usuário logado
 - botão sair
 - restauração da base demo disponível apenas para administrador
 
 - geração de documentos padrão expandida
 - disponibilizados textos-base para: notificação, abertura de defesa inicial/final, despacho, manifestação do RH, registro de manifestação do colaborador, relatório final, decisão, advertência e comunicação de suspensão quando aplicável
-- documentos são montados automaticamente com dados da ocorrência e do processo e gerados para impressão com marca d'água GLINK
+- documentos são montados automaticamente com dados da ocorrência e do processo e gerados para impressão com marca d'água EXCEPROCESS
 
 - qualificação visual por criticidade em ocorrências e processos
 - cores por criticidade: leve, moderada, grave/gravíssima

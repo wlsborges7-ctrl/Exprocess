@@ -1,13 +1,19 @@
-# ExceProcess Demo
+# ExceProcess v2 — demo comercial
 
-Versão de demonstração da plataforma ExceProcess.
+Base white-label e de demonstração da plataforma ExceProcess.
 
-## Características
-- branding com a logo ExceProcess
-- ambiente de demonstração
-- backend em memória
-- sem persistência definitiva
-- ideal para apresentação comercial
+## Estrutura modular
+- `src/config/branding.js` → nome, logo, textos e identidade
+- `src/config/demo.js` → controle do modo demo
+- `src/config/demoData.js` → dados de demonstração carregados automaticamente
+
+## O que já vem pronto
+- branding ExceProcess
+- logo aplicada
+- dados demo carregados
+- botão para resetar a demonstração
+- ambiente isolado da Glink
+- backend em memória, sem dependência de PostgreSQL
 
 ## Usuários demo
 - admin / Demo@123

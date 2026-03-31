@@ -1,0 +1,25 @@
+{
+  "name": "exceprocess-demo",
+  "version": "1.0.0-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/render-server.mjs",
+    "dev:full": "concurrently \"node server/render-server.mjs\" \"vite\"",
+    "render:start": "node server/render-server.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.2",
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: glink-process
+    env: node
+    plan: starter
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm run render:start
+    autoDeploy: true
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: DATABASE_URL
+        sync: false

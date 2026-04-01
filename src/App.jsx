@@ -1,18 +1,13 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { BRANDING } from "./config/branding.js";
-import { DEMO_MODE } from "./config/demo.js";
-import { DEMO_STATE } from "./config/demoData.js";
 
 const STORAGE_KEYS = {
-  employees: `${BRANDING.storagePrefix}_employees`,
-  occurrences: `${BRANDING.storagePrefix}_occurrences`,
-  processes: `${BRANDING.storagePrefix}_processes`,
-  page: `${BRANDING.storagePrefix}_page`,
-  attachments: `${BRANDING.storagePrefix}_attachments`,
-  terminations: `${BRANDING.storagePrefix}_terminations`,
-  users: `${BRANDING.storagePrefix}_users`,
-  session: `${BRANDING.storagePrefix}_session`
+  employees: "glink_v7_employees",
+  occurrences: "glink_v7_occurrences",
+  processes: "glink_v7_processes",
+  page: "glink_v22_page",
+  attachments: "glink_v22_attachments",
+  terminations: "glink_v22_terminations"
 };
 
 const API_BASE = import.meta.env.VITE_API_BASE || "/api";
@@ -42,7 +37,11 @@ const JUST_CAUSE_OPTIONS = [
 
 const DOCUMENT_ACCEPT = ".pdf,.png,.jpg,.jpeg,.webp";
 
-const defaultUsers = DEMO_STATE.users || [];
+const defaultUsers = [
+  { id: 1, nome: "William Borges", usuario: "admin", perfil: "Administrador", senha: "Glink@Admin#8427", ativo: true },
+  { id: 2, nome: "Gestor 1", usuario: "gestor1", perfil: "Gestor", senha: "Glink@Gestor#5184", ativo: true },
+  { id: 3, nome: "Gestor 2", usuario: "gestor2", perfil: "Gestor", senha: "Glink@Gestor#9031", ativo: true }
+];
 
 
 
@@ -142,11 +141,126 @@ function getMovementOptionsForUser(user) {
   return opts;
 }
 
-const defaultEmployees = DEMO_STATE.employees || [];
+const defaultEmployees = [
+  {
+    id: 1,
+    nome: "Carlos Henrique Lima",
+    cpf: "123.456.789-00",
+    matricula: "GLK-001",
+    cargo: "Técnico de Campo",
+    setor: "Operações",
+    base: "Rio de Janeiro",
+    gestor: "Ricardo Gomes",
+    status: "Ativo",
+    admissao: "2024-03-10",
+    email: "carlos@glink.com.br",
+    celular: "(21) 99999-0001",
+    cep: "21000-000",
+    endereco: "Rua Alfa",
+    numero: "100",
+    complemento: "Casa",
+    bairro: "Bangu",
+    cidade: "Rio de Janeiro",
+    uf: "RJ",
+    diasAfastamento: 0
+  },
+  {
+    id: 2,
+    nome: "Fernanda Souza Ribeiro",
+    cpf: "987.654.321-00",
+    matricula: "GLK-002",
+    cargo: "Assistente Administrativa",
+    setor: "RH",
+    base: "Rio de Janeiro",
+    gestor: "Patrícia Costa",
+    status: "Ativo",
+    admissao: "2023-09-18",
+    email: "fernanda@glink.com.br",
+    celular: "(21) 99999-0002",
+    cep: "22000-000",
+    endereco: "Rua Beta",
+    numero: "200",
+    complemento: "Sala 2",
+    bairro: "Tijuca",
+    cidade: "Rio de Janeiro",
+    uf: "RJ",
+    diasAfastamento: 0
+  },
+  {
+    id: 3,
+    nome: "Marcos Paulo Almeida",
+    cpf: "741.852.963-11",
+    matricula: "GLK-003",
+    cargo: "Supervisor de Operações",
+    setor: "Operações",
+    base: "Duque de Caxias",
+    gestor: "Diretoria Operacional",
+    status: "Afastado",
+    admissao: "2022-01-08",
+    email: "marcos@glink.com.br",
+    celular: "(21) 99999-0003",
+    cep: "25000-000",
+    endereco: "Rua Gama",
+    numero: "300",
+    complemento: "",
+    bairro: "Centro",
+    cidade: "Duque de Caxias",
+    uf: "RJ",
+    diasAfastamento: 5
+  }
+];
 
-const defaultOccurrences = DEMO_STATE.occurrences || [];
+const defaultOccurrences = [
+  {
+    id: 1,
+    protocolo: "OC-2026-001",
+    tipo: "Atestado",
+    funcionarioId: 3,
+    data: "2026-03-20",
+    descricao: "Atestado médico apresentado pelo colaborador.",
+    status: "Gerou processo",
+    geraProcesso: true,
+    concluida: false,
+    atestado: {
+      diasAfastamento: 5,
+      informouCID: true,
+      cidNumero: "J11",
+      hospital: "Hospital Central",
+      crmMedico: "CRM/RJ 123456"
+    },
+    penalidade: null,
+    dano: null,
+    advertencia: null,
+    outras: null,
+    timeline: [
+      { id: 1, data: "20/03/2026 09:00", tipo: "Abertura", resumo: "Ocorrência aberta por atestado médico." },
+      { id: 2, data: "20/03/2026 09:02", tipo: "Vínculo", resumo: "Processo interno gerado automaticamente." }
+    ]
+  }
+];
 
-const defaultProcesses = DEMO_STATE.processes || [];
+const defaultProcesses = [
+  {
+    id: 1,
+    numero: "PROC-2026-001",
+    occurrenceId: 1,
+    occurrenceNumber: "OC-2026-001",
+    funcionarioId: 3,
+    assunto: "Apuração de afastamento médico",
+    prazo: "2026-03-26",
+    status: "Manifestação pendente",
+    awaitingResponse: false,
+    awaitingType: "",
+    awaitingLabel: "",
+    responseDeadline: "",
+    blockedForProceeding: false,
+    movimentacoes: [
+      { id: 1, data: "20/03/2026 09:02", tipo: "Abertura", texto: "Processo aberto automaticamente a partir da ocorrência cadastrada." },
+      { id: 2, data: "20/03/2026 09:05", tipo: "Manifestação inicial do RH", texto: "RH recepciona o atestado e instaura análise preliminar." },
+      { id: 3, data: "21/03/2026 14:20", tipo: "Notificação ao colaborador", texto: "Solicitada manifestação do funcionário pelo sistema." }
+    ]
+  }
+];
 
 const loadStorage = (key, fallback) => {
   try {
@@ -326,7 +440,7 @@ export default function App() {
   const [selectedProcessId, setSelectedProcessId] = useState(null);
   const [users, setUsers] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.users, defaultUsers), defaultUsers));
   const [session, setSession] = useState(() => loadStorage(STORAGE_KEYS.session, null));
-  const [authUser, setAuthUser] = useState(() => loadStorage(`${BRANDING.storagePrefix}_auth_user`, null));
+  const [authUser, setAuthUser] = useState(() => loadStorage("glink_v35_auth_user", null));
   const [loginForm, setLoginForm] = useState({ usuario: "", senha: "" });
   const [passwordChangeForm, setPasswordChangeForm] = useState({ senha: "", confirmar: "" });
   const [loginError, setLoginError] = useState("");
@@ -339,8 +453,12 @@ export default function App() {
   const [backendUpdatedAt, setBackendUpdatedAt] = useState("");
   const [syncNotice, setSyncNotice] = useState("");
   const [remoteReady, setRemoteReady] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const syncTimeoutRef = useRef(null);
   const pollIntervalRef = useRef(null);
+  const onlinePingIntervalRef = useRef(null);
+  const inactivityTimeoutRef = useRef(null);
+  const lastActivityRef = useRef(Date.now());
   const skipNextSyncRef = useRef(false);
 
   const [expandedEmployeeIds, setExpandedEmployeeIds] = useState([]);
@@ -399,7 +517,7 @@ export default function App() {
     outras: { titulo: "" }
   });
 
-  const [attachments, setAttachments] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.attachments, DEMO_STATE.attachments || []), DEMO_STATE.attachments || []));
+  const [attachments, setAttachments] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.attachments, []), []));
   const [previewAttachment, setPreviewAttachment] = useState(null);
   const [movementAttachmentDrafts, setMovementAttachmentDrafts] = useState({});
   const [attachmentLinkDrafts, setAttachmentLinkDrafts] = useState({});
@@ -416,7 +534,7 @@ export default function App() {
     sintese: "",
     normaViolada: ""
   });
-  const [terminations, setTerminations] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.terminations, DEMO_STATE.terminations || []), DEMO_STATE.terminations || []));
+  const [terminations, setTerminations] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.terminations, []), []));
   const [quickEventDrafts, setQuickEventDrafts] = useState({});
   const [movementType, setMovementType] = useState("Movimentação");
   const [movementText, setMovementText] = useState("");
@@ -438,7 +556,7 @@ export default function App() {
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.terminations, JSON.stringify(terminations)); }, [terminations]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users)); }, [users]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session)); }, [session]);
-  useEffect(() => { localStorage.setItem(`${BRANDING.storagePrefix}_auth_user`, JSON.stringify(authUser)); }, [authUser]);
+  useEffect(() => { localStorage.setItem("glink_v35_auth_user", JSON.stringify(authUser)); }, [authUser]);
   useEffect(() => {
     if (!session?.user) return;
     if (remoteReady) return;
@@ -480,6 +598,27 @@ export default function App() {
     }, 6000);
     return () => clearInterval(pollIntervalRef.current);
   }, [session, remoteReady, backendRevision]);
+
+  useEffect(() => {
+    if (!session?.sessionId) return;
+    resetInactivityTimer();
+    const activityEvents = ["mousemove", "mousedown", "keydown", "scroll", "touchstart"];
+    const activityHandler = () => resetInactivityTimer();
+
+    activityEvents.forEach((evt) => window.addEventListener(evt, activityHandler, { passive: true }));
+    pingSession();
+    fetchOnlineUsers();
+    clearInterval(onlinePingIntervalRef.current);
+    onlinePingIntervalRef.current = setInterval(() => {
+      pingSession();
+    }, 30000);
+
+    return () => {
+      activityEvents.forEach((evt) => window.removeEventListener(evt, activityHandler));
+      clearInterval(onlinePingIntervalRef.current);
+      clearTimeout(inactivityTimeoutRef.current);
+    };
+  }, [session?.sessionId]);
 
   useEffect(() => {
     if (!Array.isArray(users)) setUsers(defaultUsers);
@@ -1783,35 +1922,76 @@ Despacho conclusivo.`;
   }
 
   function resetDemoData() {
-    [
-      STORAGE_KEYS.employees,
-      STORAGE_KEYS.occurrences,
-      STORAGE_KEYS.processes,
-      STORAGE_KEYS.attachments,
-      STORAGE_KEYS.terminations,
-      STORAGE_KEYS.users,
-      STORAGE_KEYS.session,
-      `${BRANDING.storagePrefix}_user`,
-      `${BRANDING.storagePrefix}_auth_user`
-    ].forEach((key) => localStorage.removeItem(key));
-
-    setUsers(structuredClone(DEMO_STATE.users || []));
-    setEmployees(structuredClone(DEMO_STATE.employees || []));
-    setOccurrences(structuredClone(DEMO_STATE.occurrences || []));
-    setProcesses(structuredClone(DEMO_STATE.processes || []));
-    setAttachments(structuredClone(DEMO_STATE.attachments || []));
-    setTerminations(structuredClone(DEMO_STATE.terminations || []));
+    const ok = window.confirm("Isso vai restaurar os dados de demonstração e apagar o que foi cadastrado localmente. Deseja continuar?");
+    if (!ok) return;
+    setEmployees(defaultEmployees);
+    setOccurrences(defaultOccurrences);
+    setProcesses(defaultProcesses);
+    setAttachments([]);
+    setTerminations([]);
     setSelectedProcessId(null);
+    setExpandedEmployeeIds([]);
+    setExpandedOccurrenceIds([]);
     setExpandedProcessIds([]);
     setActivePage("Dashboard");
-    setCurrentUser(null);
-    setSession(null);
-    window.location.reload();
   }
 
 
 
-async function fetchBootstrap() {
+async function formatOnlineTime(iso) {
+  if (!iso) return "-";
+  try {
+    return new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  } catch {
+    return "-";
+  }
+}
+
+async function fetchOnlineUsers() {
+  if (!session?.sessionId) return;
+  try {
+    const res = await fetch(`${API_BASE}/online`);
+    const payload = await res.json().catch(() => ({}));
+    if (res.ok && payload?.ok) {
+      setOnlineUsers(Array.isArray(payload.users) ? payload.users : []);
+    }
+  } catch (_) {
+    // silêncio
+  }
+}
+
+async function pingSession() {
+  if (!session?.sessionId) return;
+  try {
+    const res = await fetch(`${API_BASE}/ping`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId: session.sessionId })
+    });
+    const payload = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      if (res.status === 401) {
+        handleLogout("Sua sessão foi encerrada por inatividade.");
+      }
+      return;
+    }
+    if (payload?.ok) {
+      fetchOnlineUsers();
+    }
+  } catch (_) {
+    // silêncio
+  }
+}
+
+function resetInactivityTimer() {
+  lastActivityRef.current = Date.now();
+  clearTimeout(inactivityTimeoutRef.current);
+  inactivityTimeoutRef.current = setTimeout(() => {
+    handleLogout("Sua sessão foi encerrada após 10 minutos de inatividade.");
+  }, 10 * 60 * 1000);
+}
+
+function fetchBootstrap() {
   const res = await fetch(`${API_BASE}/bootstrap`);
   if (!res.ok) throw new Error("Não foi possível carregar a base central.");
   const payload = await res.json();
@@ -1875,7 +2055,7 @@ async function pushSnapshot() {
         setLoginError(payload.message || "Usuário ou senha inválidos.");
         return;
       }
-      setSession({ user: payload.user, userId: payload.user.id, loginAt: nowBr() });
+      setSession({ user: payload.user, userId: payload.user.id, sessionId: payload.sessionId, loginAt: nowBr() });
       setAuthUser(payload.user);
       setLoginError("");
       setLoginForm({ usuario: "", senha: "" });
@@ -1886,31 +2066,46 @@ async function pushSnapshot() {
     }
   }
 
-  function handleLogout() {
+  async function handleLogout(reason = "") {
+    const currentSessionId = session?.sessionId;
+    try {
+      if (currentSessionId) {
+        await fetch(`${API_BASE}/auth/logout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId: currentSessionId })
+        });
+      }
+    } catch (_) {
+      // silêncio
+    }
     setSession(null);
     setAuthUser(null);
     setSelectedProcessId(null);
     setExpandedProcessIds([]);
     setLoginError("");
     setRemoteReady(false);
-    setSyncNotice("");
+    setSyncNotice(reason || "");
+    setOnlineUsers([]);
     clearTimeout(syncTimeoutRef.current);
     clearInterval(pollIntervalRef.current);
+    clearInterval(onlinePingIntervalRef.current);
+    clearTimeout(inactivityTimeoutRef.current);
   }
 
   function renderLogin() {
     return (
       <div className="login-screen">
         <div className="login-card">
-          <div className="login-brand brand-with-logo">
-            <img src={BRANDING.logoPath} alt={BRANDING.appName} className="brand-logo login-logo" />
+          <div className="login-brand">
+            <div className="brand-mark">G</div>
             <div>
-              <strong>{BRANDING.appName}</strong>
-              <span>{BRANDING.loginSubtitle}</span>
+              <strong>Glink Process</strong>
+              <span>Acesso interno sincronizado</span>
             </div>
           </div>
           <h1>Entrar no sistema</h1>
-          <p>{BRANDING.internalAccessText}</p>
+          <p>Use seu usuário e senha para acessar o ambiente interno da GLINK.</p>
           <form className="login-form" onSubmit={handleLogin}>
             <input placeholder="Usuário" value={loginForm.usuario} onChange={(e) => setLoginForm({ ...loginForm, usuario: e.target.value })} />
             <div className="password-wrap">
@@ -2389,7 +2584,6 @@ function renderOccurrenceSpecificFields() {
     return (
       <>
         <header className="hero">
-          {DEMO_MODE ? <div className="demo-badge">MODO DEMONSTRAÇÃO</div> : null}
           <div>
             <h1>Dashboard</h1>
             <p>Indicadores visuais de pessoal e andamento operacional para a versão de entrega local.</p>
@@ -2451,6 +2645,23 @@ function renderOccurrenceSpecificFields() {
                         Abrir
                       </button>
                     </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+          <Card title="Usuários online agora" subtitle="Sessões ativas nos últimos 10 minutos.">
+            {onlineUsers.length === 0 ? (
+              <EmptyState title="Nenhum usuário online" text="Não há sessões ativas neste momento." />
+            ) : (
+              <div className="list compact-list">
+                {onlineUsers.map((user) => (
+                  <div className="list-item" key={user.sessionId}>
+                    <div>
+                      <strong>{user.nome}</strong>
+                      <small>{user.perfil}</small>
+                    </div>
+                    <Badge>{formatOnlineTime(user.lastSeenAt)}</Badge>
                   </div>
                 ))}
               </div>
@@ -3653,11 +3864,11 @@ function renderOccurrenceSpecificFields() {
       ) : null}
       <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand brand-with-logo">
-          <img src={BRANDING.logoPath} alt={BRANDING.appName} className="brand-logo sidebar-logo" />
+        <div className="brand">
+          <div className="brand-mark">G</div>
           <div>
-            <strong>{BRANDING.appName}</strong>
-            <span>{BRANDING.sidebarSubtitle}</span>
+            <strong>Glink Process</strong>
+            <span>Gestão administrativa interna</span>
           </div>
         </div>
 
@@ -3675,7 +3886,7 @@ function renderOccurrenceSpecificFields() {
         </div>
 
         {currentUser?.perfil === "Administrador" ? (
-          <button className="btn secondary full-btn" onClick={resetDemoData}>Resetar demonstração</button>
+          <button className="btn secondary full-btn" onClick={resetDemoData}>Restaurar demo</button>
         ) : null}
         <button className="btn ghost full-btn" onClick={handleLogout}>Sair</button>
       </aside>

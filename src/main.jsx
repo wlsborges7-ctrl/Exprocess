@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./styles.css";
-import { BRANDING } from "./config/branding.js";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -15,13 +14,13 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    console.error(`${BRANDING.appName} RUNTIME ERROR:`, error, info);
+    console.error("GLINK PROCESS RUNTIME ERROR:", error, info);
   }
 
   handleReset = () => {
     try {
       Object.keys(localStorage)
-        .filter((key) => key.startsWith(BRANDING.storagePrefix))
+        .filter((key) => key.startsWith("glink_"))
         .forEach((key) => localStorage.removeItem(key));
     } catch (e) {
       console.error("Falha ao limpar armazenamento local", e);
@@ -35,10 +34,10 @@ class ErrorBoundary extends React.Component {
         <div className="login-screen">
           <div className="login-card">
             <div className="login-brand">
-              <div className="brand-mark">{BRANDING.markLetter}</div>
+              <div className="brand-mark">G</div>
               <div>
-                <strong>{BRANDING.appName}</strong>
-                <span>{BRANDING.recoverySubtitle}</span>
+                <strong>Glink Process</strong>
+                <span>Modo de recuperação</span>
               </div>
             </div>
             <h1>Falha ao carregar a aplicação</h1>

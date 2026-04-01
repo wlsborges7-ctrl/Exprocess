@@ -488,30 +488,12 @@ label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px
 }
 
 
-.brand-with-logo {
-  align-items: center;
-}
-.brand-logo {
-  display: block;
-  object-fit: contain;
-  background: white;
-}
-.sidebar-logo {
-  width: 128px;
-  height: 54px;
-}
-.login-logo {
-  width: 180px;
-  height: 76px;
-}
-.brand-mark {
-  display: none;
-}
+.list-item small { display:block; }
 
 
-/* branding modular */
-.brand-logo {
-  border-radius: 8px;
+.deadline-alert .btn,
+.deadline-ok .btn {
+  margin-top: 8px;
 }
 
 
@@ -535,17 +517,6 @@ label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px
   background: white;
   border-radius: 8px;
 }
-
-.sidebar-logo {
-  width: 128px;
-  height: 54px;
-}
-
-.login-logo {
-  width: 180px;
-  height: 76px;
-}
-
-.brand-mark {
-  display: none;
-}
+.sidebar-logo { width: 128px; height: 54px; }
+.login-logo { width: 180px; height: 76px; }
+.brand-mark { display: none; }

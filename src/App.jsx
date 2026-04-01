@@ -1,8 +1,8 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BRANDING } from "./config/branding.js";
-import { DEMO_STATE } from "./config/demoData.js";
 import { DEMO_MODE } from "./config/demo.js";
+import { DEMO_STATE } from "./config/demoData.js";
 
 const STORAGE_KEYS = {
   employees: `${BRANDING.storagePrefix}_employees`,
@@ -11,7 +11,8 @@ const STORAGE_KEYS = {
   page: `${BRANDING.storagePrefix}_page`,
   attachments: `${BRANDING.storagePrefix}_attachments`,
   terminations: `${BRANDING.storagePrefix}_terminations`,
-  users: `${BRANDING.storagePrefix}_users`
+  users: `${BRANDING.storagePrefix}_users`,
+  session: `${BRANDING.storagePrefix}_session`
 };
 
 const API_BASE = import.meta.env.VITE_API_BASE || "/api";
@@ -41,11 +42,7 @@ const JUST_CAUSE_OPTIONS = [
 
 const DOCUMENT_ACCEPT = ".pdf,.png,.jpg,.jpeg,.webp";
 
-const defaultUsers = [
-  { id: 1, nome: "William Borges", usuario: "admin", perfil: "Administrador", senha: "Exce@Admin#8427", ativo: true },
-  { id: 2, nome: "Gestor 1", usuario: "gestor1", perfil: "Gestor", senha: "Exce@Gestor#5184", ativo: true },
-  { id: 3, nome: "Gestor 2", usuario: "gestor2", perfil: "Gestor", senha: "Exce@Gestor#9031", ativo: true }
-];
+const defaultUsers = DEMO_STATE.users || [];
 
 
 
@@ -145,126 +142,11 @@ function getMovementOptionsForUser(user) {
   return opts;
 }
 
-const defaultEmployees = [
-  {
-    id: 1,
-    nome: "Carlos Henrique Lima",
-    cpf: "123.456.789-00",
-    matricula: "GLK-001",
-    cargo: "Técnico de Campo",
-    setor: "Operações",
-    base: "Rio de Janeiro",
-    gestor: "Ricardo Gomes",
-    status: "Ativo",
-    admissao: "2024-03-10",
-    email: "carlos@exceprocess.com.br",
-    celular: "(21) 99999-0001",
-    cep: "21000-000",
-    endereco: "Rua Alfa",
-    numero: "100",
-    complemento: "Casa",
-    bairro: "Bangu",
-    cidade: "Rio de Janeiro",
-    uf: "RJ",
-    diasAfastamento: 0
-  },
-  {
-    id: 2,
-    nome: "Fernanda Souza Ribeiro",
-    cpf: "987.654.321-00",
-    matricula: "GLK-002",
-    cargo: "Assistente Administrativa",
-    setor: "RH",
-    base: "Rio de Janeiro",
-    gestor: "Patrícia Costa",
-    status: "Ativo",
-    admissao: "2023-09-18",
-    email: "fernanda@exceprocess.com.br",
-    celular: "(21) 99999-0002",
-    cep: "22000-000",
-    endereco: "Rua Beta",
-    numero: "200",
-    complemento: "Sala 2",
-    bairro: "Tijuca",
-    cidade: "Rio de Janeiro",
-    uf: "RJ",
-    diasAfastamento: 0
-  },
-  {
-    id: 3,
-    nome: "Marcos Paulo Almeida",
-    cpf: "741.852.963-11",
-    matricula: "GLK-003",
-    cargo: "Supervisor de Operações",
-    setor: "Operações",
-    base: "Duque de Caxias",
-    gestor: "Diretoria Operacional",
-    status: "Afastado",
-    admissao: "2022-01-08",
-    email: "marcos@exceprocess.com.br",
-    celular: "(21) 99999-0003",
-    cep: "25000-000",
-    endereco: "Rua Gama",
-    numero: "300",
-    complemento: "",
-    bairro: "Centro",
-    cidade: "Duque de Caxias",
-    uf: "RJ",
-    diasAfastamento: 5
-  }
-];
+const defaultEmployees = DEMO_STATE.employees || [];
 
-const defaultOccurrences = [
-  {
-    id: 1,
-    protocolo: "OC-2026-001",
-    tipo: "Atestado",
-    funcionarioId: 3,
-    data: "2026-03-20",
-    descricao: "Atestado médico apresentado pelo colaborador.",
-    status: "Gerou processo",
-    geraProcesso: true,
-    concluida: false,
-    atestado: {
-      diasAfastamento: 5,
-      informouCID: true,
-      cidNumero: "J11",
-      hospital: "Hospital Central",
-      crmMedico: "CRM/RJ 123456"
-    },
-    penalidade: null,
-    dano: null,
-    advertencia: null,
-    outras: null,
-    timeline: [
-      { id: 1, data: "20/03/2026 09:00", tipo: "Abertura", resumo: "Ocorrência aberta por atestado médico." },
-      { id: 2, data: "20/03/2026 09:02", tipo: "Vínculo", resumo: "Processo interno gerado automaticamente." }
-    ]
-  }
-];
+const defaultOccurrences = DEMO_STATE.occurrences || [];
 
-const defaultProcesses = [
-  {
-    id: 1,
-    numero: "PROC-2026-001",
-    occurrenceId: 1,
-    occurrenceNumber: "OC-2026-001",
-    funcionarioId: 3,
-    assunto: "Apuração de afastamento médico",
-    prazo: "2026-03-26",
-    status: "Manifestação pendente",
-    awaitingResponse: false,
-    awaitingType: "",
-    awaitingLabel: "",
-    responseDeadline: "",
-    blockedForProceeding: false,
-    movimentacoes: [
-      { id: 1, data: "20/03/2026 09:02", tipo: "Abertura", texto: "Processo aberto automaticamente a partir da ocorrência cadastrada." },
-      { id: 2, data: "20/03/2026 09:05", tipo: "Manifestação inicial do RH", texto: "RH recepciona o atestado e instaura análise preliminar." },
-      { id: 3, data: "21/03/2026 14:20", tipo: "Notificação ao colaborador", texto: "Solicitada manifestação do funcionário pelo sistema." }
-    ]
-  }
-];
+const defaultProcesses = DEMO_STATE.processes || [];
 
 const loadStorage = (key, fallback) => {
   try {
@@ -472,6 +354,8 @@ export default function App() {
   const [employeeStatusFilter, setEmployeeStatusFilter] = useState("Todos");
   const [occurrenceTypeFilter, setOccurrenceTypeFilter] = useState("Todos");
   const [processBoardView, setProcessBoardView] = useState("Em tramitação");
+  const [employeeSortOrder, setEmployeeSortOrder] = useState("nome_asc");
+  const [standardDocSelection, setStandardDocSelection] = useState({});
 
   const [employeeEditingId, setEmployeeEditingId] = useState(null);
   const [showEmployeeForm, setShowEmployeeForm] = useState(false);
@@ -515,7 +399,7 @@ export default function App() {
     outras: { titulo: "" }
   });
 
-  const [attachments, setAttachments] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.attachments, DEMO_STATE.attachments), DEMO_STATE.attachments));
+  const [attachments, setAttachments] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.attachments, DEMO_STATE.attachments || []), DEMO_STATE.attachments || []));
   const [previewAttachment, setPreviewAttachment] = useState(null);
   const [movementAttachmentDrafts, setMovementAttachmentDrafts] = useState({});
   const [attachmentLinkDrafts, setAttachmentLinkDrafts] = useState({});
@@ -532,7 +416,7 @@ export default function App() {
     sintese: "",
     normaViolada: ""
   });
-  const [terminations, setTerminations] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.terminations, DEMO_STATE.terminations), DEMO_STATE.terminations));
+  const [terminations, setTerminations] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.terminations, DEMO_STATE.terminations || []), DEMO_STATE.terminations || []));
   const [quickEventDrafts, setQuickEventDrafts] = useState({});
   const [movementType, setMovementType] = useState("Movimentação");
   const [movementText, setMovementText] = useState("");
@@ -543,6 +427,8 @@ export default function App() {
   const [hrToken, setHrToken] = useState("");
   const [dispatchConclusion, setDispatchConclusion] = useState(false);
   const [terminationToken, setTerminationToken] = useState("");
+  const [movementOpenSectorDeadline, setMovementOpenSectorDeadline] = useState(false);
+  const [movementDeadlineDays, setMovementDeadlineDays] = useState("");
 
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.page, JSON.stringify(activePage)); }, [activePage]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.employees, JSON.stringify(employees)); }, [employees]);
@@ -552,7 +438,7 @@ export default function App() {
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.terminations, JSON.stringify(terminations)); }, [terminations]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users)); }, [users]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session)); }, [session]);
-  useEffect(() => { localStorage.setItem("glink_v35_auth_user", JSON.stringify(authUser)); }, [authUser]);
+  useEffect(() => { localStorage.setItem(`${BRANDING.storagePrefix}_auth_user`, JSON.stringify(authUser)); }, [authUser]);
   useEffect(() => {
     if (!session?.user) return;
     if (remoteReady) return;
@@ -643,14 +529,26 @@ export default function App() {
 
   const filteredEmployees = useMemo(() => {
     const term = employeeSearch.toLowerCase().trim();
-    return normalizedEmployees.filter((item) => {
+    const base = normalizedEmployees.filter((item) => {
       const matchesText = !term || [item.nome, item.cpf, item.matricula, item.cargo, item.setor, item.base, item.gestor, item.status, item.email, item.celular, item.endereco, item.numero, item.complemento, item.bairro, item.cidade, item.uf, item.cep]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(term));
       const matchesStatus = employeeStatusFilter === "Todos" || item.status === employeeStatusFilter;
       return matchesText && matchesStatus;
     });
-  }, [employees, employeeSearch, employeeStatusFilter]);
+
+    const sorted = [...base];
+    sorted.sort((a, b) => {
+      if (employeeSortOrder === "nome_asc") return String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR");
+      if (employeeSortOrder === "nome_desc") return String(b.nome || "").localeCompare(String(a.nome || ""), "pt-BR");
+      if (employeeSortOrder === "matricula_asc") return String(a.matricula || "").localeCompare(String(b.matricula || ""), "pt-BR");
+      if (employeeSortOrder === "matricula_desc") return String(b.matricula || "").localeCompare(String(a.matricula || ""), "pt-BR");
+      if (employeeSortOrder === "setor") return String(a.setor || "").localeCompare(String(b.setor || ""), "pt-BR") || String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR");
+      if (employeeSortOrder === "status") return String(a.status || "").localeCompare(String(b.status || ""), "pt-BR") || String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR");
+      return 0;
+    });
+    return sorted;
+  }, [employees, employeeSearch, employeeStatusFilter, employeeSortOrder]);
 
   const filteredOccurrences = useMemo(() => {
     const term = occurrenceSearch.toLowerCase().trim();
@@ -1174,6 +1072,28 @@ export default function App() {
     addProcessMovement(processId, label, `Aguardando ${waitingType}. Prazo fatal: ${formatDate(deadline.slice(0,10))} às ${deadline.slice(11,16)}.`);
   }
 
+  function startSectorDeadline(processId, sourceLabel, days) {
+    const numericDays = Math.max(0, Number(days || 0));
+    if (!numericDays) return;
+    const deadline = computeDeadlineFromNow(0, numericDays);
+    const process = processes.find((item) => item.id === processId);
+    const sector = queueTargetLabel(process?.assignedTo);
+    setProcesses((prev) => prev.map((item) =>
+      item.id === processId
+        ? {
+            ...item,
+            status: "Aguardando despacho",
+            awaitingResponse: true,
+            awaitingType: "despacho",
+            awaitingLabel: `${sourceLabel} → ${sector}`,
+            responseDeadline: deadline,
+            blockedForProceeding: true
+          }
+        : item
+    ));
+    addProcessMovement(processId, "Prazo interno", `Prazo interno aberto para ${sector} por ${numericDays} dia(s). Prazo fatal: ${formatDate(deadline.slice(0,10))} às ${deadline.slice(11,16)}.`);
+  }
+
   function clearResponseWindow(processId, note = "Manifestação/defesa recebida. Fluxo liberado para prosseguimento.", statusOverride = null) {
     setProcesses((prev) => prev.map((item) =>
       item.id === processId
@@ -1211,7 +1131,7 @@ export default function App() {
     return false;
   }
 
-  function applyWorkflowAfterMovement(processId, movementKind, isConclusive = false) {
+  function applyWorkflowAfterMovement(processId, movementKind, isConclusive = false, internalDeadlineDays = 0) {
     const kind = String(movementKind || "").toLowerCase();
 
     if (kind === "notificação ao colaborador" || kind === "notificacao ao colaborador" || kind.includes("prazo de defesa") || kind === "defesa final") {
@@ -1239,7 +1159,8 @@ export default function App() {
               awaitingResponse: true,
               awaitingType: "despacho",
               awaitingLabel: "Manifestação do funcionário",
-              blockedForProceeding: false
+              responseDeadline: internalDeadlineDays > 0 ? computeDeadlineFromNow(0, internalDeadlineDays) : "",
+              blockedForProceeding: internalDeadlineDays > 0
             }
           : item
       ));
@@ -1298,6 +1219,7 @@ Despacho conclusivo.`;
     }
 
     const kind = String(movementType || "").toLowerCase();
+    const internalDays = Math.max(0, Number(movementDeadlineDays || 0));
     const pendingMatched = selectedProcess.awaitingResponse && isMovementExpectedForPending(selectedProcess, movementType);
 
     if (pendingMatched) {
@@ -1307,17 +1229,21 @@ Despacho conclusivo.`;
           `${movementType} registrada. Pendência de defesa resolvida. Processo aguardando despacho.`,
           "Aguardando despacho"
         );
-        applyWorkflowAfterMovement(selectedProcess.id, "Manifestação do funcionário");
+        applyWorkflowAfterMovement(selectedProcess.id, "Manifestação do funcionário", false, internalDays);
       } else if (kind.includes("despacho")) {
         clearResponseWindow(
           selectedProcess.id,
           `${movementType} registrada. Pendência de despacho resolvida. Fluxo liberado para prosseguimento.`,
           dispatchConclusion ? "Decidido" : "Em apuração"
         );
-        applyWorkflowAfterMovement(selectedProcess.id, movementType, dispatchConclusion);
+        applyWorkflowAfterMovement(selectedProcess.id, movementType, dispatchConclusion, internalDays);
       }
     } else {
-      applyWorkflowAfterMovement(selectedProcess.id, movementType, dispatchConclusion);
+      applyWorkflowAfterMovement(selectedProcess.id, movementType, dispatchConclusion, internalDays);
+    }
+
+    if (movementOpenSectorDeadline && internalDays > 0 && movementType !== "Notificação ao colaborador") {
+      startSectorDeadline(selectedProcess.id, movementType, internalDays);
     }
 
     if (movementType === "Manifestação do RH" && hrConclusion) {
@@ -1355,20 +1281,74 @@ Despacho conclusivo.`;
     setDecisionConclusion(false);
     setDecisionResult("sem penalidade");
     setDispatchConclusion(false);
+    setMovementOpenSectorDeadline(false);
+    setMovementDeadlineDays("");
+  }
+
+
+  function archiveOccurrence(id) {
+    setOccurrences((prev) => prev.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            status: "Arquivada",
+            concluida: true,
+            timeline: [...(item.timeline || []), { id: Date.now(), data: nowBr(), tipo: "Arquivamento", resumo: "Ocorrência arquivada pelo usuário.", responsavel: actorLabel(currentUser) }]
+          }
+        : item
+    ));
+  }
+
+  function unarchiveOccurrence(id) {
+    setOccurrences((prev) => prev.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            status: item.geraProcesso ? "Gerou processo" : "Aberta",
+            concluida: false,
+            timeline: [...(item.timeline || []), { id: Date.now(), data: nowBr(), tipo: "Desarquivamento", resumo: "Ocorrência desarquivada pelo usuário.", responsavel: actorLabel(currentUser) }]
+          }
+        : item
+    ));
+  }
+
+  function unarchiveProcess(id) {
+    addProcessMovement(id, "Desarquivamento", "Processo desarquivado pelo usuário.");
+    setProcesses((prev) => prev.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            status: "Em apuração",
+            blockedForProceeding: false
+          }
+        : item
+    ));
   }
 
   function closeProcess(id) {
     addProcessMovement(id, "Encerramento", "Processo encerrado pelo usuário.");
-    setProcesses((prev) => prev.map((item) => item.id === id ? { ...item, status: "Encerrado" } : item));
-    setExpandedProcessIds((prev) => prev.filter((x) => x !== id));
-    if (selectedProcessId === id) setSelectedProcessId(null);
+    setProcesses((prev) => prev.map((item) => item.id === id ? {
+      ...item,
+      status: "Encerrado",
+      awaitingResponse: false,
+      awaitingType: "",
+      awaitingLabel: "",
+      responseDeadline: "",
+      blockedForProceeding: true
+    } : item));
   }
 
   function archiveProcess(id) {
     addProcessMovement(id, "Arquivamento", "Processo arquivado pelo usuário.");
-    setProcesses((prev) => prev.map((item) => item.id === id ? { ...item, status: "Arquivado" } : item));
-    setExpandedProcessIds((prev) => prev.filter((x) => x !== id));
-    if (selectedProcessId === id) setSelectedProcessId(null);
+    setProcesses((prev) => prev.map((item) => item.id === id ? {
+      ...item,
+      status: "Arquivado",
+      awaitingResponse: false,
+      awaitingType: "",
+      awaitingLabel: "",
+      responseDeadline: "",
+      blockedForProceeding: true
+    } : item));
   }
 
   function deleteProcess(id) {
@@ -1586,7 +1566,7 @@ Despacho conclusivo.`;
       avisoPrevio: terminationForm.avisoPrevio,
       occurrenceRef: terminationForm.occurrenceRef,
       processRef: terminationForm.processRef,
-      hipotese: terminationForm.hipotese,
+      hipotese: terminationForm.tipo === "justa_causa" ? terminationForm.hipotese : "",
       sintese: terminationForm.sintese,
       normaViolada: terminationForm.normaViolada,
       status: terminationForm.tipo === "justa_causa" ? "Em apuração" : "Concluído",
@@ -1810,16 +1790,17 @@ Despacho conclusivo.`;
       STORAGE_KEYS.attachments,
       STORAGE_KEYS.terminations,
       STORAGE_KEYS.users,
+      STORAGE_KEYS.session,
       `${BRANDING.storagePrefix}_user`,
       `${BRANDING.storagePrefix}_auth_user`
     ].forEach((key) => localStorage.removeItem(key));
 
-    setUsers(structuredClone(DEMO_STATE.users));
-    setEmployees(structuredClone(DEMO_STATE.employees));
-    setOccurrences(structuredClone(DEMO_STATE.occurrences));
-    setProcesses(structuredClone(DEMO_STATE.processes));
-    setAttachments(structuredClone(DEMO_STATE.attachments));
-    setTerminations(structuredClone(DEMO_STATE.terminations));
+    setUsers(structuredClone(DEMO_STATE.users || []));
+    setEmployees(structuredClone(DEMO_STATE.employees || []));
+    setOccurrences(structuredClone(DEMO_STATE.occurrences || []));
+    setProcesses(structuredClone(DEMO_STATE.processes || []));
+    setAttachments(structuredClone(DEMO_STATE.attachments || []));
+    setTerminations(structuredClone(DEMO_STATE.terminations || []));
     setSelectedProcessId(null);
     setExpandedProcessIds([]);
     setActivePage("Dashboard");
@@ -1921,15 +1902,15 @@ async function pushSnapshot() {
     return (
       <div className="login-screen">
         <div className="login-card">
-          <div className="login-brand">
-            <div className="brand-mark">G</div>
+          <div className="login-brand brand-with-logo">
+            <img src={BRANDING.logoPath} alt={BRANDING.appName} className="brand-logo login-logo" />
             <div>
               <strong>{BRANDING.appName}</strong>
-              <span>Acesso interno sincronizado</span>
+              <span>{BRANDING.loginSubtitle}</span>
             </div>
           </div>
           <h1>Entrar no sistema</h1>
-          <p>Use seu usuário e senha para acessar o ambiente interno da {BRANDING.legalName}.</p>
+          <p>{BRANDING.internalAccessText}</p>
           <form className="login-form" onSubmit={handleLogin}>
             <input placeholder="Usuário" value={loginForm.usuario} onChange={(e) => setLoginForm({ ...loginForm, usuario: e.target.value })} />
             <div className="password-wrap">
@@ -2559,6 +2540,14 @@ function renderOccurrenceSpecificFields() {
                 <option>Todos</option>
                 {STATUS_OPTIONS.map((status) => <option key={status}>{status}</option>)}
               </select>
+              <select className="small-filter" value={employeeSortOrder} onChange={(e) => setEmployeeSortOrder(e.target.value)}>
+                <option value="nome_asc">Nome A-Z</option>
+                <option value="nome_desc">Nome Z-A</option>
+                <option value="matricula_asc">Matrícula crescente</option>
+                <option value="matricula_desc">Matrícula decrescente</option>
+                <option value="setor">Setor</option>
+                <option value="status">Status</option>
+              </select>
             </div>
           }
         >
@@ -2735,6 +2724,11 @@ function renderOccurrenceSpecificFields() {
                   <div className="inline-actions">
                     <Badge tone={getCriticalityTone(item.classificacao)}>{getCriticalityLabel(item.classificacao)}</Badge>
                     <Badge tone={getStatusTone(item.status)}>{item.status}</Badge>
+                    {item.status === "Arquivada" ? (
+                      <button className="btn secondary mini" onClick={() => unarchiveOccurrence(item.id)}>Desarquivar</button>
+                    ) : (
+                      <button className="btn secondary mini" onClick={() => archiveOccurrence(item.id)}>Arquivar</button>
+                    )}
                     <button className="btn secondary mini" onClick={() => toggleExpanded(item.id, expandedOccurrenceIds, setExpandedOccurrenceIds)}>
                       {expandedOccurrenceIds.includes(item.id) ? "Recolher" : "Expandir"}
                     </button>
@@ -2887,9 +2881,20 @@ function renderOccurrenceSpecificFields() {
                 {expandedProcessIds.includes(item.id) ? (
                   <div className="detail-panel">
                     <DetailSection title="Cabeçalho do processo" subtitle="Informações institucionais do PAI e enquadramento.">
-                      {item.awaitingResponse ? (
+                      {item.status === "Arquivado" ? (
                         <div className="deadline-alert">
-                          <strong>Pendência ativa:</strong> aguardando {item.awaitingType || "resposta"} até {item.responseDeadline ? `${item.responseDeadline.slice(11,16)} de ${formatDate(item.responseDeadline.slice(0,10))}` : "-"}.
+                          <strong>Processo arquivado.</strong> O fluxo está bloqueado até eventual desarquivamento.
+                          <div style={{ marginTop: 10 }}>
+                            <button className="btn secondary mini" onClick={() => unarchiveProcess(item.id)}>Desarquivar processo</button>
+                          </div>
+                        </div>
+                      ) : item.status === "Encerrado" ? (
+                        <div className="deadline-ok">
+                          Processo encerrado. As movimentações estão bloqueadas e o registro permanece apenas para acompanhamento.
+                        </div>
+                      ) : item.awaitingResponse ? (
+                        <div className="deadline-alert">
+                          <strong>Pendência ativa:</strong> aguardando {item.awaitingType || "resposta"}{String(item.awaitingType || "").toLowerCase().includes("despacho") ? ` do setor ${queueTargetLabel(item.assignedTo)}` : ""} até {item.responseDeadline ? `${item.responseDeadline.slice(11,16)} de ${formatDate(item.responseDeadline.slice(0,10))}` : "-"}.
                           <div style={{ marginTop: 10 }}>
                             <button className="btn secondary mini" onClick={() => {
                               if (String(item.awaitingType || "").toLowerCase().includes("despacho")) {
@@ -2904,7 +2909,7 @@ function renderOccurrenceSpecificFields() {
                           </div>
                         </div>
                       ) : (
-                        <div className="deadline-ok">Fluxo liberado para prosseguimento. {item.status === "Aguardando despacho" ? "Processo aguardando despacho." : ""}</div>
+                        <div className="deadline-ok">Fluxo liberado para prosseguimento. {item.status === "Aguardando despacho" ? `Processo aguardando despacho de ${queueTargetLabel(item.assignedTo)}.` : ""}</div>
                       )}
                       <div className="detail-grid">
                         <div><label>Assunto</label><input value={item.assunto} onChange={(e) => { setSelectedProcessId(item.id); updateSelectedProcess("assunto", e.target.value); }} /></div>
@@ -2941,42 +2946,102 @@ function renderOccurrenceSpecificFields() {
 
                     <DetailSection title="Ações processuais" subtitle="Atalhos agrupados para reduzir ruído visual e manter fluidez institucional.">
                       <div className="action-groups">
-                        {currentUser?.perfil !== "Jurídico" ? (
-                        <div className="action-group">
-                          <div className="action-group-title">Prazos e comunicações</div>
-                          <div className="row-actions">
-                            <button className="btn secondary mini" onClick={() => startResponseWindow(item.id, "ciência/notificação do colaborador", "Notificação ao colaborador", 24, 0)}>Notificar colaborador</button>
-                            <button className="btn secondary mini" onClick={() => startResponseWindow(item.id, "defesa inicial", "Prazo de defesa inicial", 48, 0)}>Abrir defesa 48h</button>
-                            <button className="btn secondary mini" onClick={() => startResponseWindow(item.id, "defesa final", "Defesa final", 0, 3)}>Abrir defesa final</button>
+                        {item.status === "Arquivado" ? (
+                          <>
+                            <div className="action-group">
+                              <div className="action-group-title">Relatórios</div>
+                              <div className="row-actions">
+                                <button className="btn secondary mini" onClick={() => printOccurrenceReport({ ...occurrences.find((o) => o.id === item.occurrenceId), processoForcado: item })}>Gerar relatório PDF</button>
+                              </div>
+                            </div>
+                            {currentUser?.perfil !== "Jurídico" ? (
+                              <div className="action-group">
+                                <div className="action-group-title">Controle</div>
+                                <div className="row-actions">
+                                  <button className="btn secondary mini" onClick={() => unarchiveProcess(item.id)}>Desarquivar</button>
+                                  <button className="btn ghost mini" onClick={() => deleteProcess(item.id)}>Excluir</button>
+                                </div>
+                              </div>
+                            ) : null}
+                          </>
+                        ) : item.status === "Encerrado" ? (
+                          <div className="action-group">
+                            <div className="action-group-title">Relatórios</div>
+                            <div className="row-actions">
+                              <button className="btn secondary mini" onClick={() => printOccurrenceReport({ ...occurrences.find((o) => o.id === item.occurrenceId), processoForcado: item })}>Gerar relatório PDF</button>
+                            </div>
                           </div>
-                        </div>
-                        ) : null}
+                        ) : (
+                          <>
+                            {currentUser?.perfil !== "Jurídico" ? (
+                            <div className="action-group">
+                              <div className="action-group-title">Prazos e comunicações</div>
+                              <div className="row-actions">
+                                <button className="btn secondary mini" onClick={() => startResponseWindow(item.id, "ciência/notificação do colaborador", "Notificação ao colaborador", 48, 0)}>Notificar colaborador</button>
+                                <button className="btn secondary mini" onClick={() => startResponseWindow(item.id, "defesa inicial", "Prazo de defesa inicial", 48, 0)}>Abrir defesa 48h</button>
+                                <button className="btn secondary mini" onClick={() => startResponseWindow(item.id, "defesa final", "Defesa final", 0, 3)}>Abrir defesa final</button>
+                              </div>
+                            </div>
+                            ) : null}
 
-                        <div className="action-group">
-                          <div className="action-group-title">Peças e documentos padrão</div>
-                          <div className="row-actions">
-                            <button className="btn secondary mini" onClick={() => addProcessMovement(item.id, "Relatório final", "Relatório final elaborado com síntese dos fatos, provas e enquadramento.")}>Emitir relatório</button>
-                            {standardDocumentOptions(item).map((doc) => (
-                              <button key={doc.key} className="btn secondary mini" onClick={() => openStandardDocumentEditor(item, doc.key)}>{doc.label}</button>
-                            ))}
-                            <button className="btn secondary mini" onClick={() => printOccurrenceReport({ ...occurrences.find((o) => o.id === item.occurrenceId), processoForcado: item })}>Gerar relatório PDF</button>
-                          </div>
-                        </div>
+                            <div className="action-group">
+                              <div className="action-group-title">Peças e documentos padrão</div>
+                              <div className="detail-grid">
+                                <div className="full">
+                                  <label>Selecione a peça padrão</label>
+                                  <select
+                                    value={standardDocSelection[item.id] || ""}
+                                    onChange={(e) => setStandardDocSelection((prev) => ({ ...prev, [item.id]: e.target.value }))}
+                                  >
+                                    <option value="">Selecione uma peça</option>
+                                    {standardDocumentOptions(item).map((doc) => (
+                                      <option key={doc.key} value={doc.key}>{doc.label}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="row-actions">
+                                <button className="btn secondary mini" onClick={() => addProcessMovement(item.id, "Relatório final", "Relatório final elaborado com síntese dos fatos, provas e enquadramento.")}>Emitir relatório final</button>
+                                <button
+                                  className="btn secondary mini"
+                                  onClick={() => {
+                                    const selected = standardDocSelection[item.id];
+                                    if (!selected) {
+                                      alert("Selecione uma peça padrão.");
+                                      return;
+                                    }
+                                    openStandardDocumentEditor(item, selected);
+                                  }}
+                                >
+                                  Gerar peça selecionada
+                                </button>
+                                <button className="btn secondary mini" onClick={() => printOccurrenceReport({ ...occurrences.find((o) => o.id === item.occurrenceId), processoForcado: item })}>Gerar relatório PDF</button>
+                              </div>
+                            </div>
 
-                        {currentUser?.perfil !== "Jurídico" ? (
-                        <div className="action-group">
-                          <div className="action-group-title">Encerramento e controle</div>
-                          <div className="row-actions">
-                            {item.status !== "Encerrado" ? <button className="btn secondary mini" onClick={() => closeProcess(item.id)}>Encerrar</button> : null}
-                            {item.status !== "Arquivado" ? <button className="btn secondary mini" onClick={() => archiveProcess(item.id)}>Arquivar</button> : null}
-                            <button className="btn ghost mini" onClick={() => deleteProcess(item.id)}>Excluir</button>
-                          </div>
-                        </div>
-                        ) : null}
+                            {currentUser?.perfil !== "Jurídico" ? (
+                            <div className="action-group">
+                              <div className="action-group-title">Encerramento e controle</div>
+                              <div className="row-actions">
+                                <button className="btn secondary mini" onClick={() => closeProcess(item.id)}>Encerrar</button>
+                                <button className="btn secondary mini" onClick={() => archiveProcess(item.id)}>Arquivar</button>
+                                <button className="btn ghost mini" onClick={() => deleteProcess(item.id)}>Excluir</button>
+                              </div>
+                            </div>
+                            ) : null}
+                          </>
+                        )}
                       </div>
                     </DetailSection>
 
                     <DetailSection title="Movimentações" subtitle="Linha formal do processo e manifestações.">
+                      {item.status === "Encerrado" || item.status === "Arquivado" ? (
+                        <div className="muted-box">
+                          {item.status === "Encerrado"
+                            ? "Processo encerrado. As movimentações estão bloqueadas e o registro permanece apenas para acompanhamento."
+                            : "Processo arquivado. Desarquive o processo para voltar a movimentá-lo."}
+                        </div>
+                      ) : (
                       <div className="movement-box">
                         <div className="movement-header"><h3>Nova movimentação</h3></div>
                         <div className="detail-grid">
@@ -3032,6 +3097,26 @@ function renderOccurrenceSpecificFields() {
                               Despacho conclusivo
                             </label>
                           ) : null}
+                          {selectedProcessId === item.id && movementType !== "Notificação ao colaborador" ? (
+                            <>
+                              <label className="checkbox simple-box">
+                                <input type="checkbox" checked={movementOpenSectorDeadline} onChange={(e) => setMovementOpenSectorDeadline(e.target.checked)} />
+                                Abrir prazo interno para o setor atribuído
+                              </label>
+                              {movementOpenSectorDeadline ? (
+                                <div>
+                                  <label>Prazo interno (dias)</label>
+                                  <input
+                                    type="number"
+                                    min="1"
+                                    value={movementDeadlineDays}
+                                    onChange={(e) => setMovementDeadlineDays(e.target.value)}
+                                    placeholder="Ex.: 2"
+                                  />
+                                </div>
+                              ) : <div></div>}
+                            </>
+                          ) : null}
                           <div className="full">
                             <label>Texto</label>
                             <textarea rows={4} value={selectedProcessId === item.id ? movementText : ""} onChange={(e) => { setSelectedProcessId(item.id); setMovementText(e.target.value); }} placeholder="Digite a movimentação processual." />
@@ -3069,6 +3154,7 @@ function renderOccurrenceSpecificFields() {
                         </div>
                         <button className="btn primary" type="button" onClick={() => { setSelectedProcessId(item.id); addMovement(); }}>Registrar movimentação</button>
                       </div>
+                      )}
 
                       <div className="timeline">
                         {(item.movimentacoes || []).map((mv) => {
@@ -3144,14 +3230,14 @@ function renderOccurrenceSpecificFields() {
 
               {selectedProcess.awaitingResponse ? (
                 <div className="deadline-alert">
-                  <strong>Pendência ativa:</strong> aguardando {selectedProcess.awaitingType || "resposta"} até {selectedProcess.responseDeadline ? `${selectedProcess.responseDeadline.slice(11,16)} de ${formatDate(selectedProcess.responseDeadline.slice(0,10))}` : "-"}.
+                  <strong>Pendência ativa:</strong> aguardando {selectedProcess.awaitingType || "resposta"}{String(selectedProcess.awaitingType || "").toLowerCase().includes("despacho") ? ` do setor ${queueTargetLabel(selectedProcess.assignedTo)}` : ""} até {selectedProcess.responseDeadline ? `${selectedProcess.responseDeadline.slice(11,16)} de ${formatDate(selectedProcess.responseDeadline.slice(0,10))}` : "-"}.
                   <div style={{ marginTop: 10 }}>
                     <button className="btn secondary mini" onClick={() => {
                       if (String(selectedProcess.awaitingType || "").toLowerCase().includes("despacho")) {
                         clearResponseWindow(selectedProcess.id, "Pendência de despacho marcada manualmente como cumprida. Fluxo liberado.", "Em apuração");
                       } else {
                         clearResponseWindow(selectedProcess.id, "Pendência marcada manualmente como cumprida. Processo aguardando despacho.", "Aguardando despacho");
-                        applyWorkflowAfterMovement(selectedProcess.id, "Manifestação do funcionário");
+                        applyWorkflowAfterMovement(selectedProcess.id, "Manifestação do funcionário", false, internalDays);
                       }
                     }}>
                       Marcar pendência como cumprida
@@ -3159,7 +3245,7 @@ function renderOccurrenceSpecificFields() {
                   </div>
                 </div>
               ) : (
-                <div className="deadline-ok">Fluxo liberado para prosseguimento. {selectedProcess.status === "Aguardando despacho" ? "Processo aguardando despacho." : ""}</div>
+                <div className="deadline-ok">Fluxo liberado para prosseguimento. {selectedProcess.status === "Aguardando despacho" ? `Processo aguardando despacho de ${queueTargetLabel(selectedProcess.assignedTo)}.` : ""}</div>
               )}
               <div className="timeline">
                 {(selectedProcess.movimentacoes || []).map((mv) => {
@@ -3380,7 +3466,12 @@ function renderOccurrenceSpecificFields() {
                       <strong>{item.funcionarioNome}</strong>
                       <p>{item.tipo === "dispensa_ordinaria" ? "Dispensa ordinária" : item.tipo === "pedido_demissao" ? "Pedido de demissão" : "Justa causa"}</p>
                     </div>
-                    <Badge tone={item.status === "Concluído" ? "muted" : "warning"}>{item.status}</Badge>
+                    <div className="inline-actions">
+                      <Badge tone={item.status === "Concluído" ? "muted" : "warning"}>{item.status}</Badge>
+                      {(item.tipo === "dispensa_ordinaria" || item.tipo === "pedido_demissao") ? (
+                        <button className="btn secondary mini" onClick={() => printTerminationEstimateReport(item, employeeMap[item.funcionarioId])}>Gerar estimativa PDF</button>
+                      ) : null}
+                    </div>
                   </div>
                   <div className="detail-inline">
                     <span>Data: {formatDate(item.data)}</span>
@@ -3562,11 +3653,11 @@ function renderOccurrenceSpecificFields() {
       ) : null}
       <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand">
-          <div className="brand-mark">G</div>
+        <div className="brand brand-with-logo">
+          <img src={BRANDING.logoPath} alt={BRANDING.appName} className="brand-logo sidebar-logo" />
           <div>
             <strong>{BRANDING.appName}</strong>
-            <span>Gestão administrativa interna</span>
+            <span>{BRANDING.sidebarSubtitle}</span>
           </div>
         </div>
 

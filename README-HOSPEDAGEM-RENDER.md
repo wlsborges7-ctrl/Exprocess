@@ -1,19 +1,22 @@
-# ExceProcess v2 — demo comercial
+# ExceProcess v2.6 — demo comercial
 
-Base white-label e de demonstração da plataforma ExceProcess.
+Versão da ExceProcess com todos os recursos atualmente implantados na linha 2.6 da Glink, adaptada para ambiente de demonstração.
+
+## O que vem nesta versão
+- ordenação de funcionários
+- ocorrências com arquivar/desarquivar
+- processos com arquivar/desarquivar/encerrar e bloqueios por status
+- anexos organizados por movimentação
+- peças e documentos padrão reorganizados
+- atribuição por setor
+- fila de despacho por setor
+- automação de prazos internos por movimentação
+- desligamentos com estimativa PDF
 
 ## Estrutura modular
-- `src/config/branding.js` → nome, logo, textos e identidade
-- `src/config/demo.js` → controle do modo demo
-- `src/config/demoData.js` → dados de demonstração carregados automaticamente
-
-## O que já vem pronto
-- branding ExceProcess
-- logo aplicada
-- dados demo carregados
-- botão para resetar a demonstração
-- ambiente isolado da Glink
-- backend em memória, sem dependência de PostgreSQL
+- `src/config/branding.js`
+- `src/config/demo.js`
+- `src/config/demoData.js`
 
 ## Usuários demo
 - admin / Demo@123

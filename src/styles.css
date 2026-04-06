@@ -3,10 +3,10 @@
   --bg: #f3f6fb;
   --panel: #ffffff;
   --line: #d9e2ec;
-  --text: #10233f;
-  --muted: #5f738c;
-  --primary: #18a7f0;
-  --primary-dark: #0e8ed0;
+  --text: #0f2f73;
+  --muted: #6a6a6a;
+  --primary: #1e8a2b;
+  --primary-dark: #0f2f73;
   --danger: #d14b4b;
   --warning: #c48a1c;
   --success: #1f8a5b;
@@ -495,3 +495,28 @@ label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px
 .deadline-ok .btn {
   margin-top: 8px;
 }
+
+
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.brand-logo {
+  display: block;
+  object-fit: contain;
+  background: white;
+  border-radius: 8px;
+}
+.sidebar-logo { width: 128px; height: 54px; }
+.login-logo { width: 180px; height: 76px; }
+.brand-mark { display: none; }

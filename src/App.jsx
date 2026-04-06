@@ -1,13 +1,25 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { BRANDING } from "./config/branding.js";
+import { DEMO_MODE } from "./config/demo.js";
+import DashboardPage from "./pages/DashboardPage.jsx";
+import EmployeesPage from "./pages/EmployeesPage.jsx";
+import OccurrencesPage from "./pages/OccurrencesPage.jsx";
+import ProcessesPage from "./pages/ProcessesPage.jsx";
+import TerminationsPage from "./pages/TerminationsPage.jsx";
+import UsersPanelPage from "./pages/UsersPanelPage.jsx";
+import ReportsPage from "./pages/ReportsPage.jsx";
+import { DEMO_STATE } from "./config/demoData.js";
 
 const STORAGE_KEYS = {
-  employees: "glink_v7_employees",
-  occurrences: "glink_v7_occurrences",
-  processes: "glink_v7_processes",
-  page: "glink_v22_page",
-  attachments: "glink_v22_attachments",
-  terminations: "glink_v22_terminations"
+  employees: `${BRANDING.storagePrefix}_employees`,
+  occurrences: `${BRANDING.storagePrefix}_occurrences`,
+  processes: `${BRANDING.storagePrefix}_processes`,
+  page: `${BRANDING.storagePrefix}_page`,
+  attachments: `${BRANDING.storagePrefix}_attachments`,
+  terminations: `${BRANDING.storagePrefix}_terminations`,
+  users: `${BRANDING.storagePrefix}_users`,
+  session: `${BRANDING.storagePrefix}_session`
 };
 
 const API_BASE = import.meta.env.VITE_API_BASE || "/api";
@@ -37,11 +49,7 @@ const JUST_CAUSE_OPTIONS = [
 
 const DOCUMENT_ACCEPT = ".pdf,.png,.jpg,.jpeg,.webp";
 
-const defaultUsers = [
-  { id: 1, nome: "William Borges", usuario: "admin", perfil: "Administrador", senha: "Glink@Admin#8427", ativo: true },
-  { id: 2, nome: "Gestor 1", usuario: "gestor1", perfil: "Gestor", senha: "Glink@Gestor#5184", ativo: true },
-  { id: 3, nome: "Gestor 2", usuario: "gestor2", perfil: "Gestor", senha: "Glink@Gestor#9031", ativo: true }
-];
+const defaultUsers = DEMO_STATE.users || [];
 
 
 
@@ -141,126 +149,11 @@ function getMovementOptionsForUser(user) {
   return opts;
 }
 
-const defaultEmployees = [
-  {
-    id: 1,
-    nome: "Carlos Henrique Lima",
-    cpf: "123.456.789-00",
-    matricula: "GLK-001",
-    cargo: "Técnico de Campo",
-    setor: "Operações",
-    base: "Rio de Janeiro",
-    gestor: "Ricardo Gomes",
-    status: "Ativo",
-    admissao: "2024-03-10",
-    email: "carlos@glink.com.br",
-    celular: "(21) 99999-0001",
-    cep: "21000-000",
-    endereco: "Rua Alfa",
-    numero: "100",
-    complemento: "Casa",
-    bairro: "Bangu",
-    cidade: "Rio de Janeiro",
-    uf: "RJ",
-    diasAfastamento: 0
-  },
-  {
-    id: 2,
-    nome: "Fernanda Souza Ribeiro",
-    cpf: "987.654.321-00",
-    matricula: "GLK-002",
-    cargo: "Assistente Administrativa",
-    setor: "RH",
-    base: "Rio de Janeiro",
-    gestor: "Patrícia Costa",
-    status: "Ativo",
-    admissao: "2023-09-18",
-    email: "fernanda@glink.com.br",
-    celular: "(21) 99999-0002",
-    cep: "22000-000",
-    endereco: "Rua Beta",
-    numero: "200",
-    complemento: "Sala 2",
-    bairro: "Tijuca",
-    cidade: "Rio de Janeiro",
-    uf: "RJ",
-    diasAfastamento: 0
-  },
-  {
-    id: 3,
-    nome: "Marcos Paulo Almeida",
-    cpf: "741.852.963-11",
-    matricula: "GLK-003",
-    cargo: "Supervisor de Operações",
-    setor: "Operações",
-    base: "Duque de Caxias",
-    gestor: "Diretoria Operacional",
-    status: "Afastado",
-    admissao: "2022-01-08",
-    email: "marcos@glink.com.br",
-    celular: "(21) 99999-0003",
-    cep: "25000-000",
-    endereco: "Rua Gama",
-    numero: "300",
-    complemento: "",
-    bairro: "Centro",
-    cidade: "Duque de Caxias",
-    uf: "RJ",
-    diasAfastamento: 5
-  }
-];
+const defaultEmployees = DEMO_STATE.employees || [];
 
-const defaultOccurrences = [
-  {
-    id: 1,
-    protocolo: "OC-2026-001",
-    tipo: "Atestado",
-    funcionarioId: 3,
-    data: "2026-03-20",
-    descricao: "Atestado médico apresentado pelo colaborador.",
-    status: "Gerou processo",
-    geraProcesso: true,
-    concluida: false,
-    atestado: {
-      diasAfastamento: 5,
-      informouCID: true,
-      cidNumero: "J11",
-      hospital: "Hospital Central",
-      crmMedico: "CRM/RJ 123456"
-    },
-    penalidade: null,
-    dano: null,
-    advertencia: null,
-    outras: null,
-    timeline: [
-      { id: 1, data: "20/03/2026 09:00", tipo: "Abertura", resumo: "Ocorrência aberta por atestado médico." },
-      { id: 2, data: "20/03/2026 09:02", tipo: "Vínculo", resumo: "Processo interno gerado automaticamente." }
-    ]
-  }
-];
+const defaultOccurrences = DEMO_STATE.occurrences || [];
 
-const defaultProcesses = [
-  {
-    id: 1,
-    numero: "PROC-2026-001",
-    occurrenceId: 1,
-    occurrenceNumber: "OC-2026-001",
-    funcionarioId: 3,
-    assunto: "Apuração de afastamento médico",
-    prazo: "2026-03-26",
-    status: "Manifestação pendente",
-    awaitingResponse: false,
-    awaitingType: "",
-    awaitingLabel: "",
-    responseDeadline: "",
-    blockedForProceeding: false,
-    movimentacoes: [
-      { id: 1, data: "20/03/2026 09:02", tipo: "Abertura", texto: "Processo aberto automaticamente a partir da ocorrência cadastrada." },
-      { id: 2, data: "20/03/2026 09:05", tipo: "Manifestação inicial do RH", texto: "RH recepciona o atestado e instaura análise preliminar." },
-      { id: 3, data: "21/03/2026 14:20", tipo: "Notificação ao colaborador", texto: "Solicitada manifestação do funcionário pelo sistema." }
-    ]
-  }
-];
+const defaultProcesses = DEMO_STATE.processes || [];
 
 const loadStorage = (key, fallback) => {
   try {
@@ -440,7 +333,7 @@ export default function App() {
   const [selectedProcessId, setSelectedProcessId] = useState(null);
   const [users, setUsers] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.users, defaultUsers), defaultUsers));
   const [session, setSession] = useState(() => loadStorage(STORAGE_KEYS.session, null));
-  const [authUser, setAuthUser] = useState(() => loadStorage("glink_v35_auth_user", null));
+  const [authUser, setAuthUser] = useState(() => loadStorage(`${BRANDING.storagePrefix}_auth_user`, null));
   const [loginForm, setLoginForm] = useState({ usuario: "", senha: "" });
   const [passwordChangeForm, setPasswordChangeForm] = useState({ senha: "", confirmar: "" });
   const [loginError, setLoginError] = useState("");
@@ -453,12 +346,8 @@ export default function App() {
   const [backendUpdatedAt, setBackendUpdatedAt] = useState("");
   const [syncNotice, setSyncNotice] = useState("");
   const [remoteReady, setRemoteReady] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState([]);
   const syncTimeoutRef = useRef(null);
   const pollIntervalRef = useRef(null);
-  const onlinePingIntervalRef = useRef(null);
-  const inactivityTimeoutRef = useRef(null);
-  const lastActivityRef = useRef(Date.now());
   const skipNextSyncRef = useRef(false);
 
   const [expandedEmployeeIds, setExpandedEmployeeIds] = useState([]);
@@ -517,7 +406,7 @@ export default function App() {
     outras: { titulo: "" }
   });
 
-  const [attachments, setAttachments] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.attachments, []), []));
+  const [attachments, setAttachments] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.attachments, DEMO_STATE.attachments || []), DEMO_STATE.attachments || []));
   const [previewAttachment, setPreviewAttachment] = useState(null);
   const [movementAttachmentDrafts, setMovementAttachmentDrafts] = useState({});
   const [attachmentLinkDrafts, setAttachmentLinkDrafts] = useState({});
@@ -534,7 +423,7 @@ export default function App() {
     sintese: "",
     normaViolada: ""
   });
-  const [terminations, setTerminations] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.terminations, []), []));
+  const [terminations, setTerminations] = useState(() => ensureArray(loadStorage(STORAGE_KEYS.terminations, DEMO_STATE.terminations || []), DEMO_STATE.terminations || []));
   const [quickEventDrafts, setQuickEventDrafts] = useState({});
   const [movementType, setMovementType] = useState("Movimentação");
   const [movementText, setMovementText] = useState("");
@@ -556,7 +445,7 @@ export default function App() {
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.terminations, JSON.stringify(terminations)); }, [terminations]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users)); }, [users]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session)); }, [session]);
-  useEffect(() => { localStorage.setItem("glink_v35_auth_user", JSON.stringify(authUser)); }, [authUser]);
+  useEffect(() => { localStorage.setItem(`${BRANDING.storagePrefix}_auth_user`, JSON.stringify(authUser)); }, [authUser]);
   useEffect(() => {
     if (!session?.user) return;
     if (remoteReady) return;
@@ -598,27 +487,6 @@ export default function App() {
     }, 6000);
     return () => clearInterval(pollIntervalRef.current);
   }, [session, remoteReady, backendRevision]);
-
-  useEffect(() => {
-    if (!session?.sessionId) return;
-    resetInactivityTimer();
-    const activityEvents = ["mousemove", "mousedown", "keydown", "scroll", "touchstart"];
-    const activityHandler = () => resetInactivityTimer();
-
-    activityEvents.forEach((evt) => window.addEventListener(evt, activityHandler, { passive: true }));
-    pingSession();
-    fetchOnlineUsers();
-    clearInterval(onlinePingIntervalRef.current);
-    onlinePingIntervalRef.current = setInterval(() => {
-      pingSession();
-    }, 30000);
-
-    return () => {
-      activityEvents.forEach((evt) => window.removeEventListener(evt, activityHandler));
-      clearInterval(onlinePingIntervalRef.current);
-      clearTimeout(inactivityTimeoutRef.current);
-    };
-  }, [session?.sessionId]);
 
   useEffect(() => {
     if (!Array.isArray(users)) setUsers(defaultUsers);
@@ -1922,76 +1790,35 @@ Despacho conclusivo.`;
   }
 
   function resetDemoData() {
-    const ok = window.confirm("Isso vai restaurar os dados de demonstração e apagar o que foi cadastrado localmente. Deseja continuar?");
-    if (!ok) return;
-    setEmployees(defaultEmployees);
-    setOccurrences(defaultOccurrences);
-    setProcesses(defaultProcesses);
-    setAttachments([]);
-    setTerminations([]);
+    [
+      STORAGE_KEYS.employees,
+      STORAGE_KEYS.occurrences,
+      STORAGE_KEYS.processes,
+      STORAGE_KEYS.attachments,
+      STORAGE_KEYS.terminations,
+      STORAGE_KEYS.users,
+      STORAGE_KEYS.session,
+      `${BRANDING.storagePrefix}_user`,
+      `${BRANDING.storagePrefix}_auth_user`
+    ].forEach((key) => localStorage.removeItem(key));
+
+    setUsers(structuredClone(DEMO_STATE.users || []));
+    setEmployees(structuredClone(DEMO_STATE.employees || []));
+    setOccurrences(structuredClone(DEMO_STATE.occurrences || []));
+    setProcesses(structuredClone(DEMO_STATE.processes || []));
+    setAttachments(structuredClone(DEMO_STATE.attachments || []));
+    setTerminations(structuredClone(DEMO_STATE.terminations || []));
     setSelectedProcessId(null);
-    setExpandedEmployeeIds([]);
-    setExpandedOccurrenceIds([]);
     setExpandedProcessIds([]);
     setActivePage("Dashboard");
+    setCurrentUser(null);
+    setSession(null);
+    window.location.reload();
   }
 
 
 
-async function formatOnlineTime(iso) {
-  if (!iso) return "-";
-  try {
-    return new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-  } catch {
-    return "-";
-  }
-}
-
-async function fetchOnlineUsers() {
-  if (!session?.sessionId) return;
-  try {
-    const res = await fetch(`${API_BASE}/online`);
-    const payload = await res.json().catch(() => ({}));
-    if (res.ok && payload?.ok) {
-      setOnlineUsers(Array.isArray(payload.users) ? payload.users : []);
-    }
-  } catch (_) {
-    // silêncio
-  }
-}
-
-async function pingSession() {
-  if (!session?.sessionId) return;
-  try {
-    const res = await fetch(`${API_BASE}/ping`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionId: session.sessionId })
-    });
-    const payload = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      if (res.status === 401) {
-        handleLogout("Sua sessão foi encerrada por inatividade.");
-      }
-      return;
-    }
-    if (payload?.ok) {
-      fetchOnlineUsers();
-    }
-  } catch (_) {
-    // silêncio
-  }
-}
-
-function resetInactivityTimer() {
-  lastActivityRef.current = Date.now();
-  clearTimeout(inactivityTimeoutRef.current);
-  inactivityTimeoutRef.current = setTimeout(() => {
-    handleLogout("Sua sessão foi encerrada após 10 minutos de inatividade.");
-  }, 10 * 60 * 1000);
-}
-
-function fetchBootstrap() {
+async function fetchBootstrap() {
   const res = await fetch(`${API_BASE}/bootstrap`);
   if (!res.ok) throw new Error("Não foi possível carregar a base central.");
   const payload = await res.json();
@@ -2055,7 +1882,7 @@ async function pushSnapshot() {
         setLoginError(payload.message || "Usuário ou senha inválidos.");
         return;
       }
-      setSession({ user: payload.user, userId: payload.user.id, sessionId: payload.sessionId, loginAt: nowBr() });
+      setSession({ user: payload.user, userId: payload.user.id, loginAt: nowBr() });
       setAuthUser(payload.user);
       setLoginError("");
       setLoginForm({ usuario: "", senha: "" });
@@ -2066,46 +1893,31 @@ async function pushSnapshot() {
     }
   }
 
-  async function handleLogout(reason = "") {
-    const currentSessionId = session?.sessionId;
-    try {
-      if (currentSessionId) {
-        await fetch(`${API_BASE}/auth/logout`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId: currentSessionId })
-        });
-      }
-    } catch (_) {
-      // silêncio
-    }
+  function handleLogout() {
     setSession(null);
     setAuthUser(null);
     setSelectedProcessId(null);
     setExpandedProcessIds([]);
     setLoginError("");
     setRemoteReady(false);
-    setSyncNotice(reason || "");
-    setOnlineUsers([]);
+    setSyncNotice("");
     clearTimeout(syncTimeoutRef.current);
     clearInterval(pollIntervalRef.current);
-    clearInterval(onlinePingIntervalRef.current);
-    clearTimeout(inactivityTimeoutRef.current);
   }
 
   function renderLogin() {
     return (
       <div className="login-screen">
         <div className="login-card">
-          <div className="login-brand">
-            <div className="brand-mark">G</div>
+          <div className="login-brand brand-with-logo">
+            <img src={BRANDING.logoPath} alt={BRANDING.appName} className="brand-logo login-logo" />
             <div>
-              <strong>Glink Process</strong>
-              <span>Acesso interno sincronizado</span>
+              <strong>{BRANDING.appName}</strong>
+              <span>{BRANDING.loginSubtitle}</span>
             </div>
           </div>
           <h1>Entrar no sistema</h1>
-          <p>Use seu usuário e senha para acessar o ambiente interno da GLINK.</p>
+          <p>{BRANDING.internalAccessText}</p>
           <form className="login-form" onSubmit={handleLogin}>
             <input placeholder="Usuário" value={loginForm.usuario} onChange={(e) => setLoginForm({ ...loginForm, usuario: e.target.value })} />
             <div className="password-wrap">
@@ -2326,94 +2138,8 @@ function handleCreateUser(event) {
     setSyncNotice("Senha alterada com sucesso.");
   }
 
-  function renderUsersPanel() {
-    if (currentUser?.perfil !== "Administrador") return null;
-    return (
-      <section className="two-col">
-        <Card title="Criar usuário" subtitle="Gestão simples de acessos da solução.">
-          <form className="form-grid" onSubmit={handleCreateUser}>
-            <input placeholder="Nome" value={userForm.nome} onChange={(e) => setUserForm({ ...userForm, nome: e.target.value })} />
-            <input placeholder="Usuário" value={userForm.usuario} onChange={(e) => setUserForm({ ...userForm, usuario: e.target.value })} />
-            <select value={userForm.perfil} onChange={(e) => setUserForm({ ...userForm, perfil: e.target.value })}>
-              {PROFILE_OPTIONS.map((item) => <option key={item}>{item}</option>)}
-            </select>
-            <div className="password-wrap">
-              <input
-                type={showUserPassword ? "text" : "password"}
-                placeholder="Senha"
-                value={userForm.senha}
-                onChange={(e) => setUserForm({ ...userForm, senha: e.target.value })}
-              />
-              <button type="button" className="eye-btn" onClick={() => setShowUserPassword((v) => !v)}>
-                {showUserPassword ? "Ocultar" : "Mostrar"}
-              </button>
-            </div>
-            <label className="checkbox simple-box">
-              <input type="checkbox" checked={userForm.ativo} onChange={(e) => setUserForm({ ...userForm, ativo: e.target.checked })} />
-              Usuário ativo
-            </label>
-            <div className="form-actions full">
-              <button className="btn primary" type="submit">Criar usuário</button>
-            </div>
-          </form>
-        </Card>
+  
 
-        <Card title="Usuários cadastrados" subtitle="Perfis, permissões e primeiro acesso.">
-          <div className="list compact-list">
-            {safeUsers.map((item) => {
-              const perms = getUserPermissions(item);
-              return (
-                <div className="list-item vertical" key={item.id}>
-                  <div className="process-top">
-                    <div>
-                      <strong>{item.nome}</strong>
-                      <p>{item.usuario} · {item.perfil}</p>
-                    </div>
-                    <div className="inline-actions">
-                      <Badge tone={item.ativo ? "success" : "muted"}>{item.ativo ? "Ativo" : "Inativo"}</Badge>
-                      <Badge tone={item.mustChangePassword ? "warning" : "success"}>{item.mustChangePassword ? "Troca de senha pendente" : "Senha ok"}</Badge>
-                      {item.id !== currentUser?.id ? (
-                        <button className="btn secondary mini" onClick={() => toggleUserActive(item.id)}>
-                          {item.ativo ? "Inativar" : "Ativar"}
-                        </button>
-                      ) : null}
-                      {item.id !== currentUser?.id ? (
-                        <button className="btn ghost mini" onClick={() => deleteUser(item.id)}>
-                          Excluir
-                        </button>
-                      ) : null}
-                      <button className="btn secondary mini" onClick={() => setEditingPermissionsId(editingPermissionsId === item.id ? null : item.id)}>
-                        {editingPermissionsId === item.id ? "Fechar permissões" : "Permissões"}
-                      </button>
-                    </div>
-                  </div>
-                  {editingPermissionsId === item.id ? (
-                    <div className="detail-grid">
-                      <div>
-                        <label>Perfil</label>
-                        <select value={item.perfil} onChange={(e) => updateUserAccess(item.id, { perfil: e.target.value })}>
-                          {PROFILE_OPTIONS.map((opt) => <option key={opt}>{opt}</option>)}
-                        </select>
-                      </div>
-                      <label className="checkbox simple-box"><input type="checkbox" checked={!!perms.canEmployees} onChange={(e) => updateUserPermission(item.id, "canEmployees", e.target.checked)} /> Funcionários</label>
-                      <label className="checkbox simple-box"><input type="checkbox" checked={!!perms.canOccurrences} onChange={(e) => updateUserPermission(item.id, "canOccurrences", e.target.checked)} /> Ocorrências</label>
-                      <label className="checkbox simple-box"><input type="checkbox" checked={!!perms.canProcesses} onChange={(e) => updateUserPermission(item.id, "canProcesses", e.target.checked)} /> Processos</label>
-                      <label className="checkbox simple-box"><input type="checkbox" checked={!!perms.canTerminations} onChange={(e) => updateUserPermission(item.id, "canTerminations", e.target.checked)} /> Desligamentos</label>
-                      <label className="checkbox simple-box"><input type="checkbox" checked={!!perms.processControl} onChange={(e) => updateUserPermission(item.id, "processControl", e.target.checked)} /> Controle processual</label>
-                      <label className="checkbox simple-box"><input type="checkbox" checked={!!perms.canHrDispatch} onChange={(e) => updateUserPermission(item.id, "canHrDispatch", e.target.checked)} /> Despacho do RH</label>
-                      <label className="checkbox simple-box"><input type="checkbox" checked={!!perms.canLegalDispatch} onChange={(e) => updateUserPermission(item.id, "canLegalDispatch", e.target.checked)} /> Despacho jurídico</label>
-                      <label className="checkbox simple-box"><input type="checkbox" checked={!!perms.canConclusiveDecision} onChange={(e) => updateUserPermission(item.id, "canConclusiveDecision", e.target.checked)} /> Conclusões/decisões</label>
-                      <label className="checkbox simple-box"><input type="checkbox" checked={!!item.mustChangePassword} onChange={(e) => updateUserAccess(item.id, { mustChangePassword: e.target.checked })} /> Exigir troca de senha no próximo login</label>
-                    </div>
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      </section>
-    );
-  }
 
 
 function getDocumentTitle(docType) {
@@ -2580,914 +2306,17 @@ function renderOccurrenceSpecificFields() {
     return null;
   }
 
-  function renderDashboard() {
-    return (
-      <>
-        <header className="hero">
-          <div>
-            <h1>Dashboard</h1>
-            <p>Indicadores visuais de pessoal e andamento operacional para a versão de entrega local.</p>
-          </div>
-          <div className="hero-actions">
-            <button className="btn secondary" onClick={() => setActivePage("Funcionários")}>Novo funcionário</button>
-            <button className="btn primary" onClick={() => setActivePage("Ocorrências")}>Nova ocorrência</button>
-          </div>
-        </header>
+  
 
-        <section className="stats-grid">
-          {stats.map((item) => (
-            <div className="stat-card" key={item.label}>
-              <span>{item.label}</span>
-              <strong>{item.value}</strong>
-            </div>
-          ))}
-        </section>
 
-        <section className="chart-grid">
-          <Card title="Panorama de pessoal" subtitle="Leitura rápida de afastados e suspensos.">
-            <div className="mini-charts">
-              <MiniDonut value={totalAway} total={totalEmployees} label="afastados" />
-              <MiniDonut value={totalSusp} total={totalEmployees} label="suspensos" />
-            </div>
-          </Card>
-          <Card title="Status dos processos" subtitle="Distribuição dos processos cadastrados.">
-            <div className="bars">
-              {PROCESS_STATUS.map((status) => {
-                const count = processes.filter((p) => p.status === status).length;
-                const max = Math.max(1, processes.length);
-                return (
-                  <div className="bar-row" key={status}>
-                    <span>{status}</span>
-                    <div className="bar-track"><div className="bar-fill" style={{ width: `${(count / max) * 100}%` }}></div></div>
-                    <strong>{count}</strong>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-        </section>
+  
 
-        <section className="chart-grid">
-          <Card title="Minha fila de despacho" subtitle={`Processos aguardando despacho atribuídos para ${myQueueTarget || "seu perfil"}.`}>
-            {myDispatchQueue.length === 0 ? (
-              <EmptyState title="Nenhum processo na fila" text="Não há processos aguardando despacho para o seu perfil neste momento." />
-            ) : (
-              <div className="list compact-list">
-                {myDispatchQueue.map((item) => (
-                  <div className="list-item vertical" key={item.id}>
-                    <div className="process-top">
-                      <div>
-                        <strong>{item.numero}</strong>
-                        <p>{item.assunto}</p>
-                        <small>{employeeMap[item.funcionarioId]?.nome || "-"}</small>
-                      </div>
-                      <button className="btn secondary mini" onClick={() => { setActivePage("Processos Internos"); setSelectedProcessId(item.id); setExpandedProcessIds((prev) => prev.includes(item.id) ? prev : [...prev, item.id]); }}>
-                        Abrir
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Card>
-          <Card title="Usuários online agora" subtitle="Sessões ativas nos últimos 10 minutos.">
-            {onlineUsers.length === 0 ? (
-              <EmptyState title="Nenhum usuário online" text="Não há sessões ativas neste momento." />
-            ) : (
-              <div className="list compact-list">
-                {onlineUsers.map((user) => (
-                  <div className="list-item" key={user.sessionId}>
-                    <div>
-                      <strong>{user.nome}</strong>
-                      <small>{user.perfil}</small>
-                    </div>
-                    <Badge>{formatOnlineTime(user.lastSeenAt)}</Badge>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Card>
-          <Card title="Processos por setor" subtitle="Total de processos atribuídos e quantos estão aguardando despacho.">
-            <div className="list compact-list">
-              <div className="list-item"><strong>RH</strong><Badge>{assignedBySectorCounts["RH"]}</Badge><small>Aguardando despacho: {awaitingDispatchBySectorCounts["RH"]}</small></div>
-              <div className="list-item"><strong>Jurídico</strong><Badge>{assignedBySectorCounts["Jurídico"]}</Badge><small>Aguardando despacho: {awaitingDispatchBySectorCounts["Jurídico"]}</small></div>
-              <div className="list-item"><strong>Gestão</strong><Badge>{assignedBySectorCounts["Gestão"]}</Badge><small>Aguardando despacho: {awaitingDispatchBySectorCounts["Gestão"]}</small></div>
-            </div>
-          </Card>
-        </section>
-      </>
-    );
-  }
 
-  function renderEmployees() {
-    return (
-      <section className={showEmployeeForm ? "two-col wide-left" : "single-col"}>
-        <Card
-          title="Funcionários"
-          subtitle="Tela mais limpa: o formulário só aparece quando solicitado, liberando espaço para consulta."
-          action={
-            <div className="toolbar-inline">
-              {!showEmployeeForm ? (
-                <button className="btn primary" onClick={() => { resetEmployeeForm(); setShowEmployeeForm(true); }}>
-                  Novo funcionário
-                </button>
-              ) : null}
-              {showEmployeeForm ? (
-                <button className="btn secondary" onClick={resetEmployeeForm}>
-                  Fechar formulário
-                </button>
-              ) : null}
-            </div>
-          }
-        >
-          {showEmployeeForm ? (
-            <form className="form-grid" onSubmit={handleEmployeeSubmit}>
-              <input placeholder="Nome completo" value={employeeForm.nome} onChange={(e) => setEmployeeForm({ ...employeeForm, nome: e.target.value })} required />
-              <input placeholder="CPF" value={employeeForm.cpf} onChange={(e) => setEmployeeForm({ ...employeeForm, cpf: e.target.value })} required />
-              <input placeholder="Matrícula" value={employeeForm.matricula} onChange={(e) => setEmployeeForm({ ...employeeForm, matricula: e.target.value })} required />
-              <input placeholder="Cargo" value={employeeForm.cargo} onChange={(e) => setEmployeeForm({ ...employeeForm, cargo: e.target.value })} required />
-              <input type="number" min="0" step="0.01" placeholder="Salário base" value={employeeForm.salario} onChange={(e) => setEmployeeForm({ ...employeeForm, salario: e.target.value })} />
-              <select value={employeeForm.setor} onChange={(e) => setEmployeeForm({ ...employeeForm, setor: e.target.value })}>
-                {DEPARTMENTS.map((item) => <option key={item}>{item}</option>)}
-              </select>
-              <input placeholder="Base / unidade" value={employeeForm.base} onChange={(e) => setEmployeeForm({ ...employeeForm, base: e.target.value })} />
-              <input placeholder="Gestor imediato" value={employeeForm.gestor} onChange={(e) => setEmployeeForm({ ...employeeForm, gestor: e.target.value })} />
-              <select value={employeeForm.status} onChange={(e) => setEmployeeForm({ ...employeeForm, status: e.target.value })}>
-                {STATUS_OPTIONS.map((status) => <option key={status}>{status}</option>)}
-              </select>
-              <div>
-                <label>Data de admissão</label>
-                <input type="date" value={employeeForm.admissao} onChange={(e) => setEmployeeForm({ ...employeeForm, admissao: e.target.value })} />
-              </div>
-              <input type="email" placeholder="E-mail" value={employeeForm.email} onChange={(e) => setEmployeeForm({ ...employeeForm, email: e.target.value })} />
-              <input placeholder="Celular" value={employeeForm.celular} onChange={(e) => setEmployeeForm({ ...employeeForm, celular: e.target.value })} />
-              <div className="cep-grid full">
-                <input placeholder="CEP" value={employeeForm.cep} onChange={(e) => setEmployeeForm({ ...employeeForm, cep: e.target.value })} />
-                <button type="button" className="btn secondary" onClick={lookupCep}>Consultar CEP</button>
-              </div>
-              <input placeholder="Logradouro" value={employeeForm.endereco} onChange={(e) => setEmployeeForm({ ...employeeForm, endereco: e.target.value })} />
-              <input placeholder="Número" value={employeeForm.numero} onChange={(e) => setEmployeeForm({ ...employeeForm, numero: e.target.value })} />
-              <input placeholder="Complemento" value={employeeForm.complemento} onChange={(e) => setEmployeeForm({ ...employeeForm, complemento: e.target.value })} />
-              <input placeholder="Bairro" value={employeeForm.bairro} onChange={(e) => setEmployeeForm({ ...employeeForm, bairro: e.target.value })} />
-              <input placeholder="Cidade" value={employeeForm.cidade} onChange={(e) => setEmployeeForm({ ...employeeForm, cidade: e.target.value })} />
-              <input placeholder="UF" value={employeeForm.uf} onChange={(e) => setEmployeeForm({ ...employeeForm, uf: e.target.value })} />
-              <div className="form-actions full">
-                {employeeEditingId ? <button type="button" className="btn secondary" onClick={resetEmployeeForm}>Cancelar edição</button> : null}
-                <button className="btn primary" type="submit">{employeeEditingId ? "Salvar alterações" : "Salvar funcionário"}</button>
-              </div>
-            </form>
-          ) : (
-            <EmptyState title="Formulário recolhido" text="Clique em “Novo funcionário” para abrir o cadastro ou em “Editar” em um registro existente." />
-          )}
-        </Card>
+  
 
-        <Card
-          title="Funcionários cadastrados"
-          subtitle="Consulta rápida com expansão de detalhes e botão de edição."
-          action={
-            <div className="toolbar-inline">
-              <input className="search-input" placeholder="Buscar funcionário" value={employeeSearch} onChange={(e) => setEmployeeSearch(e.target.value)} />
-              <select className="small-filter" value={employeeStatusFilter} onChange={(e) => setEmployeeStatusFilter(e.target.value)}>
-                <option>Todos</option>
-                {STATUS_OPTIONS.map((status) => <option key={status}>{status}</option>)}
-              </select>
-              <select className="small-filter" value={employeeSortOrder} onChange={(e) => setEmployeeSortOrder(e.target.value)}>
-                <option value="nome_asc">Nome A-Z</option>
-                <option value="nome_desc">Nome Z-A</option>
-                <option value="matricula_asc">Matrícula crescente</option>
-                <option value="matricula_desc">Matrícula decrescente</option>
-                <option value="setor">Setor</option>
-                <option value="status">Status</option>
-              </select>
-            </div>
-          }
-        >
-          <div className="list">
-            {filteredEmployees.map((employee) => (
-              <div className="list-item vertical" key={employee.id}>
-                <div className="process-top">
-                  <div>
-                    <strong>{employee.nome}</strong>
-                    <p>{employee.cargo} · {employee.setor}</p>
-                  </div>
-                  <div className="inline-actions">
-                    <Badge tone={getStatusTone(employee.status)}>{employee.status}</Badge>
-                    <button className="btn secondary mini" onClick={() => toggleExpanded(employee.id, expandedEmployeeIds, setExpandedEmployeeIds)}>
-                      {expandedEmployeeIds.includes(employee.id) ? "Recolher" : "Expandir"}
-                    </button>
-                    <button className="btn secondary mini" onClick={() => startEmployeeEdit(employee)}>Editar</button>
-                    <button className="btn ghost mini" onClick={() => handleEmployeeDelete(employee.id)}>Excluir</button>
-                  </div>
-                </div>
-                <small className="soft">Dias afastado: {employee.diasAfastamento || 0} · INSS: {inssByEmployee[employee.id]?.shouldRefer ? "Encaminhar" : "Sem alerta"}</small>
-                {expandedEmployeeIds.includes(employee.id) ? (
-                  <div className="detail-panel">
-                    <div className="employee-actions">
-                      <button className="btn mini primary" onClick={() => {
-                        setActivePage("Ocorrências");
-                        setOccurrenceForm(prev => ({...prev, funcionarioId: employee.id, tipo: "Outras ocorrências"}));
-                      }}>Ocorrência rápida</button>
-                      <button className="btn mini secondary" onClick={() => {
-                        setActivePage("Ocorrências");
-                        setOccurrenceForm(prev => ({...prev, funcionarioId: employee.id, tipo: "Atestado"}));
-                      }}>Atestado</button>
-                      <button className="btn mini secondary" onClick={() => {
-                        setActivePage("Ocorrências");
-                        setOccurrenceForm(prev => ({...prev, funcionarioId: employee.id, tipo: "Folga meritória"}));
-                      }}>Folga meritória</button>
-                      <button className="btn mini secondary" onClick={() => {
-                        setActivePage("Desligamentos");
-                        setTerminationForm(prev => ({...prev, funcionarioId: employee.id}));
-                      }}>Desligamento</button>
-                    </div>
 
-                    <div className="detail-tabs">
-                      {["dados", "ocorrências", "processos"].map((tab) => (
-                        <button
-                          key={tab}
-                          className={`tab-btn ${((employeeDetailTabs[employee.id] || "dados") === tab) ? "active" : ""}`}
-                          onClick={() => setEmployeeDetailTabs((prev) => ({ ...prev, [employee.id]: tab }))}
-                        >
-                          {tab === "dados" ? "Dados" : tab === "ocorrências" ? "Ocorrências" : "Processos"}
-                        </button>
-                      ))}
-                    </div>
+  
 
-                    {(employeeDetailTabs[employee.id] || "dados") === "dados" ? (
-                      <div className="detail-grid">
-                        <div><label>Matrícula</label><input value={employee.matricula} readOnly /></div>
-                        <div><label>CPF</label><input value={employee.cpf} readOnly /></div>
-                        <div><label>E-mail</label><input value={employee.email || "-"} readOnly /></div>
-                        <div><label>Celular</label><input value={employee.celular || "-"} readOnly /></div>
-                        <div><label>Base</label><input value={employee.base || "-"} readOnly /></div>
-                        <div><label>Gestor</label><input value={employee.gestor || "-"} readOnly /></div>
-                        <div className="full"><label>Endereço</label><input value={`${employee.endereco || ""}, ${employee.numero || ""} ${employee.complemento ? "- " + employee.complemento : ""} - ${employee.bairro || ""} - ${employee.cidade || ""}/${employee.uf || ""} - CEP ${employee.cep || ""}`} readOnly /></div>
-                      </div>
-                    ) : null}
-
-                    {(employeeDetailTabs[employee.id] || "dados") === "ocorrências" ? (
-                      <div className="list compact-list">
-                        {occurrences.filter((item) => item.funcionarioId === employee.id).length === 0 ? (
-                          <EmptyState title="Sem ocorrências" text="As ocorrências vinculadas a este funcionário aparecerão aqui." />
-                        ) : occurrences.filter((item) => item.funcionarioId === employee.id).map((item) => (
-                          <div className="list-item vertical" key={item.id}>
-                            <div className="process-top">
-                              <div>
-                                <strong>{item.protocolo}</strong>
-                                <p>{item.tipo}</p>
-                              </div>
-                              <div className="inline-actions">
-                                <Badge tone={getCriticalityTone(item.classificacao)}>{getCriticalityLabel(item.classificacao)}</Badge>
-                                <Badge tone={getStatusTone(item.status)}>{item.status}</Badge>
-                              </div>
-                            </div>
-                            <small className="soft">{formatDate(item.data)}</small>
-                            <p>{item.descricao}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-
-                    {(employeeDetailTabs[employee.id] || "dados") === "processos" ? (
-                      <div className="list compact-list">
-                        {processes.filter((item) => item.funcionarioId === employee.id).length === 0 ? (
-                          <EmptyState title="Sem processos" text="Os processos vinculados a este funcionário aparecerão aqui." />
-                        ) : processes.filter((item) => item.funcionarioId === employee.id).map((item) => (
-                          <div className="list-item vertical" key={item.id}>
-                            <div className="process-top">
-                              <div>
-                                <strong>{item.numero}</strong>
-                                <p>{item.assunto}</p>
-                              </div>
-                              <div className="inline-actions">
-                                <Badge tone={getCriticalityTone(item.classificacao)}>{getCriticalityLabel(item.classificacao)}</Badge>
-                                <Badge tone={getStatusTone(item.status)}>{item.status}</Badge>
-                              </div>
-                            </div>
-                            <small className="soft">Ocorrência: {item.occurrenceNumber || "-"}</small>
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </Card>
-      </section>
-    );
-  }
-
-  function renderOccurrences() {
-    return (
-      <section className="two-col wide-left">
-        <Card title="Nova ocorrência" subtitle="Inclui “Outras ocorrências” e mantém campos específicos por tipo.">
-          <form className="form-grid" onSubmit={handleOccurrenceSubmit}>
-            <select value={occurrenceForm.tipo} onChange={(e) => setOccurrenceForm({ ...occurrenceForm, tipo: e.target.value })}>
-              {OCCURRENCE_TYPES.map((type) => <option key={type}>{type}</option>)}
-            </select>
-            <select value={occurrenceForm.funcionarioId} onChange={(e) => setOccurrenceForm({ ...occurrenceForm, funcionarioId: e.target.value })} required>
-              <option value="">Selecione o funcionário</option>
-              {normalizedEmployees.map((item) => <option key={item.id} value={item.id}>{item.nome}</option>)}
-            </select>
-            <input type="date" value={occurrenceForm.data} onChange={(e) => setOccurrenceForm({ ...occurrenceForm, data: e.target.value })} required />
-            <select value={occurrenceForm.classificacao} onChange={(e) => setOccurrenceForm({ ...occurrenceForm, classificacao: e.target.value })}>
-              <option value="leve">leve</option>
-              <option value="moderada">moderada</option>
-              <option value="grave">grave</option>
-              <option value="gravíssima">gravíssima</option>
-            </select>
-            <input placeholder="Norma violada (opcional)" value={occurrenceForm.normaViolada} onChange={(e) => setOccurrenceForm({ ...occurrenceForm, normaViolada: e.target.value })} />
-            <label className="checkbox simple-box">
-              <input type="checkbox" checked={occurrenceForm.geraProcesso} onChange={(e) => setOccurrenceForm({ ...occurrenceForm, geraProcesso: e.target.checked })} />
-              Gerar processo interno
-            </label>
-            <textarea className="full" rows={4} placeholder="Descreva a ocorrência" value={occurrenceForm.descricao} onChange={(e) => setOccurrenceForm({ ...occurrenceForm, descricao: e.target.value })} required />
-            {renderOccurrenceSpecificFields()}
-            <div className="form-actions full">
-              <button className="btn primary" type="submit">Salvar ocorrência</button>
-            </div>
-          </form>
-        </Card>
-
-        <Card
-          title="Ocorrências cadastradas"
-          subtitle="Com expansão, linha do tempo, classificação disciplinar e lançamentos rápidos úteis."
-          action={
-            <div className="toolbar-inline">
-              <input className="search-input" placeholder="Buscar ocorrência" value={occurrenceSearch} onChange={(e) => setOccurrenceSearch(e.target.value)} />
-              <select className="small-filter" value={occurrenceTypeFilter} onChange={(e) => setOccurrenceTypeFilter(e.target.value)}>
-                <option>Todos</option>
-                {OCCURRENCE_TYPES.map((type) => <option key={type}>{type}</option>)}
-              </select>
-            </div>
-          }
-        >
-          <div className="list">
-            {filteredOccurrences.map((item) => (
-              <div className="list-item vertical" key={item.id}>
-                <div className="process-top">
-                  <div>
-                    <strong>{item.protocolo} · {item.tipo}</strong>
-                    <p>{employeeMap[item.funcionarioId]?.nome || "Funcionário não localizado"}</p>
-                  </div>
-                  <div className="inline-actions">
-                    <Badge tone={getCriticalityTone(item.classificacao)}>{getCriticalityLabel(item.classificacao)}</Badge>
-                    <Badge tone={getStatusTone(item.status)}>{item.status}</Badge>
-                    {item.status === "Arquivada" ? (
-                      <button className="btn secondary mini" onClick={() => unarchiveOccurrence(item.id)}>Desarquivar</button>
-                    ) : (
-                      <button className="btn secondary mini" onClick={() => archiveOccurrence(item.id)}>Arquivar</button>
-                    )}
-                    <button className="btn secondary mini" onClick={() => toggleExpanded(item.id, expandedOccurrenceIds, setExpandedOccurrenceIds)}>
-                      {expandedOccurrenceIds.includes(item.id) ? "Recolher" : "Expandir"}
-                    </button>
-                  </div>
-                </div>
-                <small>{formatDate(item.data)}</small>
-
-                {expandedOccurrenceIds.includes(item.id) ? (
-                  <div className="detail-panel">
-                    <DetailSection title="Dados da ocorrência" subtitle="Identificação, qualificação e leitura do fato.">
-                      <p className="detail-text">{item.descricao}</p>
-                      <div className="detail-inline">
-                        <span>Classificação: {item.classificacao || "-"}</span>
-                        <span>Norma violada: {item.normaViolada || "-"}</span>
-                        <span>Status: {item.status || "-"}</span>
-                      </div>
-                      {item.atestado ? <div className="detail-inline"><span>CID: {item.atestado.informouCID ? (item.atestado.cidNumero || "Sim") : "Não"}</span><span>Hospital: {item.atestado.hospital || "-"}</span><span>CRM: {item.atestado.crmMedico || "-"}</span><span>Dias: {item.atestado.diasAfastamento || 0}</span></div> : null}
-                      {item.penalidade ? <div className="detail-inline"><span>Efeito: {item.penalidade.efeito}</span><span>Dias: {item.penalidade.diasSuspensao || 0}</span></div> : null}
-                      {item.dano ? <div className="detail-inline"><span>Ativo: {item.dano.ativo || "-"}</span><span>Serial: {item.dano.serial || "-"}</span><span>Local: {item.dano.local || "-"}</span><span>Valor: {item.dano.valorEstimado || "-"}</span><span>Impacto operacional: {item.dano.impactoOperacional ? "Sim" : "Não"}</span></div> : null}
-                      {item.advertencia ? <div className="detail-inline"><span>Classificação advertência: {item.advertencia.classificacao}</span></div> : null}
-                      {item.folga ? <div className="detail-inline"><span>Data da folga: {formatDate(item.folga.dataFolga)}</span><span>Validação chefia: {item.folga.validada ? "Confirmada" : "Pendente"}</span></div> : null}
-                      {item.demanda ? <div className="detail-inline"><span>Prioridade: {item.demanda.prioridade}</span><span>Prazo pretendido: {formatDate(item.demanda.prazoPretendido)}</span><span>Unidade responsável: {item.demanda.unidadeResponsavel || "-"}</span></div> : null}
-                      {item.outras ? <div className="detail-inline"><span>Título: {item.outras.titulo}</span></div> : null}
-                    </DetailSection>
-
-                    <DetailSection title="Linha do tempo" subtitle="Fatos e movimentos relacionados à ocorrência.">
-                      <div className="timeline">
-                        {(item.timeline || []).map((step) => (
-                          <div className="timeline-item" key={step.id}>
-                            <div className="timeline-dot"></div>
-                            <div className="timeline-content">
-                              <strong>{step.tipo}</strong>
-                              <small>{step.data}</small>
-                              {step.responsavel ? <small>{step.responsavel}</small> : null}
-                              <p>{step.resumo}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </DetailSection>
-
-                    {renderAttachmentBlock("occurrence", item.id, "Documentos da ocorrência", "Documento da ocorrência")}
-
-                    <DetailSection title="Ações" subtitle="Lançamentos rápidos e conclusões.">
-                      <div className="quick-box">
-                        <div className="detail-grid">
-                          <div>
-                            <label>Lançamento rápido</label>
-                            <select value={quickEventDrafts[item.id]?.type || "Movimentação"} onChange={(e) => setQuickEventDrafts((prev) => ({ ...prev, [item.id]: { ...(prev[item.id] || {}), type: e.target.value } }))}>
-                              <option>Movimentação</option>
-                              <option>Apresentação de documentos</option>
-                              <option>Envio de notificação</option>
-                              <option>Recebimento de resposta</option>
-                              <option>Despacho interno</option>
-                            </select>
-                          </div>
-                          <div className="full">
-                            <label>Resumo</label>
-                            <textarea rows={3} value={quickEventDrafts[item.id]?.text || ""} onChange={(e) => setQuickEventDrafts((prev) => ({ ...prev, [item.id]: { ...(prev[item.id] || {}), text: e.target.value } }))} placeholder="Digite o fato resumido a ser lançado na ocorrência e, se houver, no processo vinculado." />
-                          </div>
-                        </div>
-                        <div className="row-actions">
-                          <button className="btn secondary mini" onClick={() => quickRegisterOccurrenceEvent(item)}>Registrar fato rápido</button>
-                          {!item.concluida ? <button className="btn secondary mini" onClick={() => concludeOccurrence(item.id)}>Concluir</button> : null}
-                          <button className="btn secondary mini" onClick={() => printOccurrenceReport(item)}>Gerar relatório PDF</button>
-                          <button className="btn ghost mini" onClick={() => deleteOccurrence(item.id)}>Excluir</button>
-                        </div>
-                      </div>
-                    </DetailSection>
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </Card>
-      </section>
-    );
-  }
-
-  function renderProcesses() {
-    return (
-      <section className="two-col process-layout">
-        <Card
-          title="Processos internos"
-          subtitle="Abas expostas para tramitação, encerrados e arquivados. Movimentações do processo atualizam a ocorrência vinculada."
-          action={
-            <div className="process-header-tools">
-              <div className="process-tabs-vertical">
-                {["Em tramitação", "Encerrados", "Arquivados"].map((tab) => (
-                  <button
-                    key={tab}
-                    className={`tab-btn ${processBoardView === tab ? "active" : ""}`}
-                    onClick={() => {
-                      setProcessBoardView(tab);
-                      setSelectedProcessId(null);
-                    }}
-                  >
-                    {tab} <span className="tab-count">{processCounts[tab]}</span>
-                  </button>
-                ))}
-              </div>
-              <input className="search-input" placeholder="Buscar processo" value={processSearch} onChange={(e) => setProcessSearch(e.target.value)} />
-            </div>
-          }
-        >
-          <div className="list">
-            {processSummary.length === 0 ? (
-              <EmptyState
-                title={processBoardView === "Em tramitação" ? "Nenhum processo em tramitação" : processBoardView === "Encerrados" ? "Nenhum processo encerrado" : "Nenhum processo arquivado"}
-                text={processBoardView === "Em tramitação" ? "Os processos em andamento aparecerão aqui. Clique nas abas acima para consultar encerrados ou arquivados." : "Nenhum processo encontrado nesta aba no momento."}
-              />
-            ) : processSummary.map((item) => (
-              <div className="list-item vertical" key={item.id}>
-                <div className="process-top">
-                  <div>
-                    <button className="plain-link" onClick={() => {
-                      setSelectedProcessId(item.id);
-                      if (!expandedProcessIds.includes(item.id)) {
-                        setExpandedProcessIds((prev) => [...prev, item.id]);
-                      }
-                    }}>{item.numero}</button>
-                    <p>{item.assunto}</p>
-                    <small>{item.funcionarioNome}</small>
-                    <div className="detail-inline compact-chips">
-                      <span>Vinculado a {item.occurrenceNumber || "-"}</span>
-                      <span>Classificação: {item.classificacao || "-"}</span>
-                      <span>Atribuído: {queueTargetLabel(item.assignedTo)}</span>
-                      {item.sigiloso ? <span>Sigiloso</span> : null}
-                      {item.awaitingResponse ? <span>Pendência ativa</span> : null}
-                    </div>
-                  </div>
-                  <div className="inline-actions">
-                    <Badge tone={getCriticalityTone(item.classificacao)}>{getCriticalityLabel(item.classificacao)}</Badge>
-                    <Badge tone={getStatusTone(item.status)}>{item.status}</Badge>
-                    <button className="btn secondary mini" onClick={() => {
-                      const isExpanded = expandedProcessIds.includes(item.id);
-                      if (isExpanded) {
-                        setExpandedProcessIds((prev) => prev.filter((x) => x !== item.id));
-                        if (selectedProcessId === item.id) setSelectedProcessId(null);
-                      } else {
-                        setSelectedProcessId(item.id);
-                        setExpandedProcessIds((prev) => [...prev, item.id]);
-                      }
-                    }}>
-                      {expandedProcessIds.includes(item.id) ? "Recolher" : "Expandir"}
-                    </button>
-                  </div>
-                </div>
-
-                {expandedProcessIds.includes(item.id) ? (
-                  <div className="detail-panel">
-                    <DetailSection title="Cabeçalho do processo" subtitle="Informações institucionais do PAI e enquadramento.">
-                      {item.status === "Arquivado" ? (
-                        <div className="deadline-alert">
-                          <strong>Processo arquivado.</strong> O fluxo está bloqueado até eventual desarquivamento.
-                          <div style={{ marginTop: 10 }}>
-                            <button className="btn secondary mini" onClick={() => unarchiveProcess(item.id)}>Desarquivar processo</button>
-                          </div>
-                        </div>
-                      ) : item.status === "Encerrado" ? (
-                        <div className="deadline-ok">
-                          Processo encerrado. As movimentações estão bloqueadas e o registro permanece apenas para acompanhamento.
-                        </div>
-                      ) : item.awaitingResponse ? (
-                        <div className="deadline-alert">
-                          <strong>Pendência ativa:</strong> aguardando {item.awaitingType || "resposta"}{String(item.awaitingType || "").toLowerCase().includes("despacho") ? ` do setor ${queueTargetLabel(item.assignedTo)}` : ""} até {item.responseDeadline ? `${item.responseDeadline.slice(11,16)} de ${formatDate(item.responseDeadline.slice(0,10))}` : "-"}.
-                          <div style={{ marginTop: 10 }}>
-                            <button className="btn secondary mini" onClick={() => {
-                              if (String(item.awaitingType || "").toLowerCase().includes("despacho")) {
-                                clearResponseWindow(item.id, "Pendência de despacho marcada manualmente como cumprida. Fluxo liberado.", "Em apuração");
-                              } else {
-                                clearResponseWindow(item.id, "Pendência marcada manualmente como cumprida. Processo aguardando despacho.", "Aguardando despacho");
-                                applyWorkflowAfterMovement(item.id, "Manifestação do funcionário");
-                              }
-                            }}>
-                              Marcar pendência como cumprida
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="deadline-ok">Fluxo liberado para prosseguimento. {item.status === "Aguardando despacho" ? `Processo aguardando despacho de ${queueTargetLabel(item.assignedTo)}.` : ""}</div>
-                      )}
-                      <div className="detail-grid">
-                        <div><label>Assunto</label><input value={item.assunto} onChange={(e) => { setSelectedProcessId(item.id); updateSelectedProcess("assunto", e.target.value); }} /></div>
-                        <div><label>Status</label><select value={item.status} onChange={(e) => { setSelectedProcessId(item.id); updateSelectedProcess("status", e.target.value); }}>{PROCESS_STATUS.map((s) => <option key={s}>{s}</option>)}</select></div>
-                        <div><label>Prazo</label><input type="date" value={item.prazo} onChange={(e) => { setSelectedProcessId(item.id); updateSelectedProcess("prazo", e.target.value); }} /></div>
-                        <div><label>Ocorrência vinculada</label><input value={item.occurrenceNumber || "-"} readOnly /></div>
-                        <div><label>Classificação</label><input value={item.classificacao || "-"} readOnly /></div>
-                        <div><label>Norma violada</label><input value={item.normaViolada || "-"} readOnly /></div>
-                        <div><label>Sigilo</label><input value={item.sigiloso ? "Sim" : "Não"} readOnly /></div>
-                        <div>
-                          <label>Atribuir despacho para</label>
-                          <select
-                            value={Object.prototype.hasOwnProperty.call(processAssignmentDrafts, item.id) ? processAssignmentDrafts[item.id] : (item.assignedTo || "")}
-                            onChange={(e) => {
-                              const nextValue = e.target.value;
-                              setProcessAssignmentDrafts((prev) => ({ ...prev, [item.id]: nextValue }));
-                            }}
-                          >
-                            <option value="">Não atribuído</option>
-                            <option value="RH">RH</option>
-                            <option value="Jurídico">Jurídico</option>
-                            <option value="Gestão">Gestão</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label>Salvar atribuição</label>
-                          <button className="btn secondary" type="button" onClick={() => { setSelectedProcessId(item.id); saveProcessAssignment(item.id); }}>
-                            Salvar
-                          </button>
-                          <small>Atribuição atual: {queueTargetLabel(item.assignedTo)}</small>
-                        </div>
-                      </div>
-                    </DetailSection>
-
-                    <DetailSection title="Ações processuais" subtitle="Atalhos agrupados para reduzir ruído visual e manter fluidez institucional.">
-                      <div className="action-groups">
-                        {item.status === "Arquivado" ? (
-                          <>
-                            <div className="action-group">
-                              <div className="action-group-title">Relatórios</div>
-                              <div className="row-actions">
-                                <button className="btn secondary mini" onClick={() => printOccurrenceReport({ ...occurrences.find((o) => o.id === item.occurrenceId), processoForcado: item })}>Gerar relatório PDF</button>
-                              </div>
-                            </div>
-                            {currentUser?.perfil !== "Jurídico" ? (
-                              <div className="action-group">
-                                <div className="action-group-title">Controle</div>
-                                <div className="row-actions">
-                                  <button className="btn secondary mini" onClick={() => unarchiveProcess(item.id)}>Desarquivar</button>
-                                  <button className="btn ghost mini" onClick={() => deleteProcess(item.id)}>Excluir</button>
-                                </div>
-                              </div>
-                            ) : null}
-                          </>
-                        ) : item.status === "Encerrado" ? (
-                          <div className="action-group">
-                            <div className="action-group-title">Relatórios</div>
-                            <div className="row-actions">
-                              <button className="btn secondary mini" onClick={() => printOccurrenceReport({ ...occurrences.find((o) => o.id === item.occurrenceId), processoForcado: item })}>Gerar relatório PDF</button>
-                            </div>
-                          </div>
-                        ) : (
-                          <>
-                            {currentUser?.perfil !== "Jurídico" ? (
-                            <div className="action-group">
-                              <div className="action-group-title">Prazos e comunicações</div>
-                              <div className="row-actions">
-                                <button className="btn secondary mini" onClick={() => startResponseWindow(item.id, "ciência/notificação do colaborador", "Notificação ao colaborador", 48, 0)}>Notificar colaborador</button>
-                                <button className="btn secondary mini" onClick={() => startResponseWindow(item.id, "defesa inicial", "Prazo de defesa inicial", 48, 0)}>Abrir defesa 48h</button>
-                                <button className="btn secondary mini" onClick={() => startResponseWindow(item.id, "defesa final", "Defesa final", 0, 3)}>Abrir defesa final</button>
-                              </div>
-                            </div>
-                            ) : null}
-
-                            <div className="action-group">
-                              <div className="action-group-title">Peças e documentos padrão</div>
-                              <div className="detail-grid">
-                                <div className="full">
-                                  <label>Selecione a peça padrão</label>
-                                  <select
-                                    value={standardDocSelection[item.id] || ""}
-                                    onChange={(e) => setStandardDocSelection((prev) => ({ ...prev, [item.id]: e.target.value }))}
-                                  >
-                                    <option value="">Selecione uma peça</option>
-                                    {standardDocumentOptions(item).map((doc) => (
-                                      <option key={doc.key} value={doc.key}>{doc.label}</option>
-                                    ))}
-                                  </select>
-                                </div>
-                              </div>
-                              <div className="row-actions">
-                                <button className="btn secondary mini" onClick={() => addProcessMovement(item.id, "Relatório final", "Relatório final elaborado com síntese dos fatos, provas e enquadramento.")}>Emitir relatório final</button>
-                                <button
-                                  className="btn secondary mini"
-                                  onClick={() => {
-                                    const selected = standardDocSelection[item.id];
-                                    if (!selected) {
-                                      alert("Selecione uma peça padrão.");
-                                      return;
-                                    }
-                                    openStandardDocumentEditor(item, selected);
-                                  }}
-                                >
-                                  Gerar peça selecionada
-                                </button>
-                                <button className="btn secondary mini" onClick={() => printOccurrenceReport({ ...occurrences.find((o) => o.id === item.occurrenceId), processoForcado: item })}>Gerar relatório PDF</button>
-                              </div>
-                            </div>
-
-                            {currentUser?.perfil !== "Jurídico" ? (
-                            <div className="action-group">
-                              <div className="action-group-title">Encerramento e controle</div>
-                              <div className="row-actions">
-                                <button className="btn secondary mini" onClick={() => closeProcess(item.id)}>Encerrar</button>
-                                <button className="btn secondary mini" onClick={() => archiveProcess(item.id)}>Arquivar</button>
-                                <button className="btn ghost mini" onClick={() => deleteProcess(item.id)}>Excluir</button>
-                              </div>
-                            </div>
-                            ) : null}
-                          </>
-                        )}
-                      </div>
-                    </DetailSection>
-
-                    <DetailSection title="Movimentações" subtitle="Linha formal do processo e manifestações.">
-                      {item.status === "Encerrado" || item.status === "Arquivado" ? (
-                        <div className="muted-box">
-                          {item.status === "Encerrado"
-                            ? "Processo encerrado. As movimentações estão bloqueadas e o registro permanece apenas para acompanhamento."
-                            : "Processo arquivado. Desarquive o processo para voltar a movimentá-lo."}
-                        </div>
-                      ) : (
-                      <div className="movement-box">
-                        <div className="movement-header"><h3>Nova movimentação</h3></div>
-                        <div className="detail-grid">
-                          <div>
-                            <label>Tipo</label>
-                            <select value={selectedProcessId === item.id ? movementType : movementOptions[0]} onChange={(e) => { setSelectedProcessId(item.id); setMovementType(e.target.value); }}>
-                              {movementOptions.map((opt) => <option key={opt}>{opt}</option>)}
-                            </select>
-                          </div>
-                          {selectedProcessId === item.id && movementType === "Decisão" ? (
-                            <>
-                              <label className="checkbox simple-box">
-                                <input type="checkbox" checked={decisionConclusion} onChange={(e) => setDecisionConclusion(e.target.checked)} />
-                                Decisão conclusiva
-                              </label>
-                              {decisionConclusion ? (
-                                <>
-                                  <div>
-                                    <label>Resultado</label>
-                                    <select value={decisionResult} onChange={(e) => setDecisionResult(e.target.value)}>
-                                      <option>sem penalidade</option>
-                                      <option>advertência verbal</option>
-                                      <option>advertência escrita</option>
-                                      <option>suspensão</option>
-                                      <option>encaminhamento para justa causa</option>
-                                    </select>
-                                  </div>
-                                  <div>
-                                    <label>Token da chefia</label>
-                                    <input type="password" value={decisionToken} onChange={(e) => setDecisionToken(e.target.value)} placeholder="Senha/token da chefia" />
-                                  </div>
-                                </>
-                              ) : <div></div>}
-                            </>
-                          ) : null}
-                          {selectedProcessId === item.id && movementType === "Manifestação do RH" ? (
-                            <>
-                              <label className="checkbox simple-box">
-                                <input type="checkbox" checked={hrConclusion} onChange={(e) => setHrConclusion(e.target.checked)} />
-                                Manifestação conclusiva do RH
-                              </label>
-                              {hrConclusion ? (
-                                <div>
-                                  <label>Token do RH/chefia</label>
-                                  <input type="password" value={hrToken} onChange={(e) => setHrToken(e.target.value)} placeholder="Senha/token para concluir" />
-                                </div>
-                              ) : <div></div>}
-                            </>
-                          ) : null}
-                          {selectedProcessId === item.id && (movementType === "Despacho do RH" || movementType === "Despacho jurídico") ? (
-                            <label className="checkbox simple-box">
-                              <input type="checkbox" checked={dispatchConclusion} onChange={(e) => setDispatchConclusion(e.target.checked)} />
-                              Despacho conclusivo
-                            </label>
-                          ) : null}
-                          {selectedProcessId === item.id && movementType !== "Notificação ao colaborador" ? (
-                            <>
-                              <label className="checkbox simple-box">
-                                <input type="checkbox" checked={movementOpenSectorDeadline} onChange={(e) => setMovementOpenSectorDeadline(e.target.checked)} />
-                                Abrir prazo interno para o setor atribuído
-                              </label>
-                              {movementOpenSectorDeadline ? (
-                                <div>
-                                  <label>Prazo interno (dias)</label>
-                                  <input
-                                    type="number"
-                                    min="1"
-                                    value={movementDeadlineDays}
-                                    onChange={(e) => setMovementDeadlineDays(e.target.value)}
-                                    placeholder="Ex.: 2"
-                                  />
-                                </div>
-                              ) : <div></div>}
-                            </>
-                          ) : null}
-                          <div className="full">
-                            <label>Texto</label>
-                            <textarea rows={4} value={selectedProcessId === item.id ? movementText : ""} onChange={(e) => { setSelectedProcessId(item.id); setMovementText(e.target.value); }} placeholder="Digite a movimentação processual." />
-                          </div>
-                          <div className="full">
-                            <label>Anexos desta movimentação</label>
-                            <label className="upload-btn">
-                              Adicionar anexo ao movimento
-                              <input
-                                type="file"
-                                accept={DOCUMENT_ACCEPT}
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    setSelectedProcessId(item.id);
-                                    queueMovementAttachment(item.id, file);
-                                  }
-                                  e.target.value = "";
-                                }}
-                              />
-                            </label>
-                            {(movementAttachmentDrafts[item.id] || []).length > 0 ? (
-                              <div className="draft-attachment-list">
-                                {(movementAttachmentDrafts[item.id] || []).map((doc) => (
-                                  <div className="draft-attachment-item" key={doc.id}>
-                                    <span>{doc.name}</span>
-                                    <button className="btn ghost mini" onClick={() => removeMovementDraftAttachment(item.id, doc.id)}>Remover</button>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="muted-box">Nenhum anexo preparado para esta movimentação.</div>
-                            )}
-                          </div>
-                        </div>
-                        <button className="btn primary" type="button" onClick={() => { setSelectedProcessId(item.id); addMovement(); }}>Registrar movimentação</button>
-                      </div>
-                      )}
-
-                      <div className="timeline">
-                        {(item.movimentacoes || []).map((mv) => {
-                          const movementDocs = getMovementAttachments(item.id, mv.id);
-                          return (
-                          <div className="timeline-item" key={mv.id}>
-                            <div className="timeline-dot"></div>
-                            <div className="timeline-content">
-                              <div className="process-top">
-                                <div>
-                                  <strong>{mv.tipo}</strong>
-                                  <small>{mv.data}</small>
-                                  {mv.responsavel ? <small>{mv.responsavel}</small> : null}
-                                </div>
-                                <label className="upload-btn mini-upload">
-                                  Anexar a este movimento
-                                  <input
-                                    type="file"
-                                    accept={DOCUMENT_ACCEPT}
-                                    onChange={(e) => {
-                                      const file = e.target.files?.[0];
-                                      if (file) {
-                                        handleUploadAttachment("process", item.id, file, "Documento vinculado", {
-                                          movementId: mv.id,
-                                          movementType: mv.tipo,
-                                          movementText: mv.texto
-                                        });
-                                      }
-                                      e.target.value = "";
-                                    }}
-                                  />
-                                </label>
-                              </div>
-                              <p>{mv.texto}</p>
-                              {movementDocs.length > 0 ? (
-                                <div className="timeline-docs">
-                                  {movementDocs.map((doc) => (
-                                    <button key={doc.id} className="doc-chip" onClick={() => setPreviewAttachment(doc)}>
-                                      {doc.name}
-                                    </button>
-                                  ))}
-                                </div>
-                              ) : null}
-                            </div>
-                          </div>
-                        )})}
-                      </div>
-                    </DetailSection>
-
-                    {renderProcessAttachmentBlock(item)}
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card title="Leitura consolidada" subtitle="Selecione um processo na coluna ao lado para leitura limpa e detalhada.">
-          {!selectedProcess ? (
-            <EmptyState title="Nenhum processo selecionado" text="Selecione um processo na coluna da esquerda. As abas acima organizam em tramitação, encerrados e arquivados." />
-          ) : (
-            <div className="detail-panel no-top-line">
-              <div className="detail-grid">
-                <div><label>Número</label><input value={selectedProcess.numero} readOnly /></div>
-                <div><label>Status</label><input value={selectedProcess.status} readOnly /></div>
-                <div className="full"><label>Assunto</label><input value={selectedProcess.assunto} readOnly /></div>
-                <div><label>Funcionário</label><input value={employeeMap[selectedProcess.funcionarioId]?.nome || "-"} readOnly /></div>
-                <div><label>Ocorrência vinculada</label><input value={selectedProcess.occurrenceNumber || "-"} readOnly /></div>
-                <div><label>Classificação</label><input value={selectedProcess.classificacao || "-"} readOnly /></div>
-                <div><label>Norma violada</label><input value={selectedProcess.normaViolada || "-"} readOnly /></div>
-                <div><label>Sigilo</label><input value={selectedProcess.sigiloso ? "Sim" : "Não"} readOnly /></div>
-              </div>
-
-              {selectedProcess.awaitingResponse ? (
-                <div className="deadline-alert">
-                  <strong>Pendência ativa:</strong> aguardando {selectedProcess.awaitingType || "resposta"}{String(selectedProcess.awaitingType || "").toLowerCase().includes("despacho") ? ` do setor ${queueTargetLabel(selectedProcess.assignedTo)}` : ""} até {selectedProcess.responseDeadline ? `${selectedProcess.responseDeadline.slice(11,16)} de ${formatDate(selectedProcess.responseDeadline.slice(0,10))}` : "-"}.
-                  <div style={{ marginTop: 10 }}>
-                    <button className="btn secondary mini" onClick={() => {
-                      if (String(selectedProcess.awaitingType || "").toLowerCase().includes("despacho")) {
-                        clearResponseWindow(selectedProcess.id, "Pendência de despacho marcada manualmente como cumprida. Fluxo liberado.", "Em apuração");
-                      } else {
-                        clearResponseWindow(selectedProcess.id, "Pendência marcada manualmente como cumprida. Processo aguardando despacho.", "Aguardando despacho");
-                        applyWorkflowAfterMovement(selectedProcess.id, "Manifestação do funcionário", false, internalDays);
-                      }
-                    }}>
-                      Marcar pendência como cumprida
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="deadline-ok">Fluxo liberado para prosseguimento. {selectedProcess.status === "Aguardando despacho" ? `Processo aguardando despacho de ${queueTargetLabel(selectedProcess.assignedTo)}.` : ""}</div>
-              )}
-              <div className="timeline">
-                {(selectedProcess.movimentacoes || []).map((mv) => {
-                  const movementDocs = getMovementAttachments(selectedProcess.id, mv.id);
-                  return (
-                  <div className="timeline-item" key={mv.id}>
-                    <div className="timeline-dot"></div>
-                    <div className="timeline-content">
-                      <strong>{mv.tipo}</strong>
-                      <small>{mv.data}</small>
-                      {mv.responsavel ? <small>{mv.responsavel}</small> : null}
-                      <p>{mv.texto}</p>
-                      {movementDocs.length > 0 ? (
-                        <div className="timeline-docs">
-                          {movementDocs.map((doc) => (
-                            <button key={doc.id} className="doc-chip" onClick={() => setPreviewAttachment(doc)}>
-                              {doc.name}
-                            </button>
-                          ))}
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                )})}
-              </div>
-            </div>
-          )}
-        </Card>
-      </section>
-    );
-  }
 
 
 
@@ -3586,176 +2415,224 @@ function renderOccurrenceSpecificFields() {
     win.document.close();
   }
 
-  function renderTerminations() {
-    const currentHelp = currentJustCauseHelp();
-    const selectedEmployee = employeeMap[Number(terminationForm.funcionarioId)] || null;
-    const terminationEstimate = selectedEmployee ? calculateTerminationEstimate(selectedEmployee, terminationForm.tipo, terminationForm.data, terminationForm.avisoPrevio) : null;
-    if (!currentPermissions.canTerminations) {
-      return <Card title="Acesso restrito" subtitle="Seu perfil não possui acesso ao módulo de desligamentos." />;
-    }
-    return (
-      <section className="two-col wide-left">
-        <Card title="Novo desligamento" subtitle="Fluxo próprio para dispensa ordinária, pedido de demissão e justa causa.">
-          <form className="form-grid" onSubmit={handleTerminationSubmit}>
-            <select value={terminationForm.funcionarioId} onChange={(e) => setTerminationForm({ ...terminationForm, funcionarioId: e.target.value })} required>
-              <option value="">Selecione o funcionário</option>
-              {normalizedEmployees.filter((item) => item.status !== "Demitido").map((item) => <option key={item.id} value={item.id}>{item.nome}</option>)}
-            </select>
-            <select value={terminationForm.tipo} onChange={(e) => setTerminationForm({ ...terminationForm, tipo: e.target.value })}>
-              <option value="dispensa_ordinaria">Dispensa ordinária</option>
-              <option value="pedido_demissao">Pedido de demissão</option>
-              <option value="justa_causa">Dispensa por justa causa</option>
-            </select>
-            <input type="date" value={terminationForm.data} onChange={(e) => setTerminationForm({ ...terminationForm, data: e.target.value })} required />
-            <input placeholder="Motivo resumido" value={terminationForm.motivo} onChange={(e) => setTerminationForm({ ...terminationForm, motivo: e.target.value })} />
-            {terminationForm.tipo === "pedido_demissao" ? (
-              <select value={terminationForm.avisoPrevio} onChange={(e) => setTerminationForm({ ...terminationForm, avisoPrevio: e.target.value })}>
-                <option value="cumprido">Aviso prévio cumprido</option>
-                <option value="descontado">Aviso prévio descontado</option>
-              </select>
-            ) : null}
-            {terminationForm.tipo === "dispensa_ordinaria" ? (
-              <select value={terminationForm.avisoPrevio} onChange={(e) => setTerminationForm({ ...terminationForm, avisoPrevio: e.target.value })}>
-                <option value="indenizado">Aviso prévio indenizado</option>
-                <option value="cumprido">Aviso prévio cumprido</option>
-              </select>
-            ) : null}
-            {terminationForm.tipo === "justa_causa" ? (
-              <>
-                <div className="full">
-                  <label>Hipótese legal de justa causa</label>
-                  <select value={terminationForm.hipotese} onChange={(e) => setTerminationForm({ ...terminationForm, hipotese: e.target.value })}>
-                    {JUST_CAUSE_OPTIONS.map((item) => <option key={item.key} value={item.key}>{item.label}</option>)}
-                  </select>
-                </div>
-                <div className="full tooltip-card">
-                  <strong>Hipótese selecionada — resumo legal</strong>
-                  <p>{currentHelp}</p>
-                </div>
-                <input placeholder="Norma interna violada" value={terminationForm.normaViolada} onChange={(e) => setTerminationForm({ ...terminationForm, normaViolada: e.target.value })} />
-                <input placeholder="Ocorrência de referência (opcional)" value={terminationForm.occurrenceRef} onChange={(e) => setTerminationForm({ ...terminationForm, occurrenceRef: e.target.value })} />
-                <input placeholder="Processo de referência (opcional)" value={terminationForm.processRef} onChange={(e) => setTerminationForm({ ...terminationForm, processRef: e.target.value })} />
-                <textarea className="full" rows={4} placeholder="Síntese do enquadramento e do fato" value={terminationForm.sintese} onChange={(e) => setTerminationForm({ ...terminationForm, sintese: e.target.value })} />
-                <input type="password" placeholder="Token da chefia" value={terminationToken} onChange={(e) => setTerminationToken(e.target.value)} />
-              </>
-            ) : null}
-            {terminationEstimate && terminationForm.tipo !== "justa_causa" ? (
-              <div className="full estimate-box">
-                <strong>Estimativa simplificada de rescisão</strong>
-                <p>Valores estimados, sujeitos à conferência contábil/fiscal.</p>
-                <div className="detail-grid">
-                  <div><label>Salário base</label><input readOnly value={`R$ ${terminationEstimate.salario.toFixed(2)}`} /></div>
-                  <div><label>Saldo de salário</label><input readOnly value={`R$ ${terminationEstimate.saldoSalario.toFixed(2)}`} /></div>
-                  <div><label>13º proporcional</label><input readOnly value={`R$ ${terminationEstimate.decimoProporcional.toFixed(2)}`} /></div>
-                  <div><label>Férias proporcionais + 1/3</label><input readOnly value={`R$ ${terminationEstimate.feriasProporcionais.toFixed(2)}`} /></div>
-                  <div><label>Férias vencidas + 1/3</label><input readOnly value={`R$ ${terminationEstimate.feriasVencidas.toFixed(2)}`} /></div>
-                  <div><label>Aviso prévio indenizado</label><input readOnly value={`R$ ${terminationEstimate.avisoIndenizado.toFixed(2)}`} /></div>
-                  <div><label>Desconto aviso pedido</label><input readOnly value={`R$ ${terminationEstimate.descontoAvisoPedido.toFixed(2)}`} /></div>
-                  <div><label>FGTS estimado</label><input readOnly value={`R$ ${terminationEstimate.fgtsBase.toFixed(2)}`} /></div>
-                  <div><label>Multa FGTS</label><input readOnly value={`R$ ${terminationEstimate.multaFgts.toFixed(2)}`} /></div>
-                  <div className="full"><label>Total estimado</label><input readOnly value={`R$ ${terminationEstimate.total.toFixed(2)}`} /></div>
-                </div>
-              </div>
-            ) : null}
-            <div className="form-actions full">
-              <button className="btn primary" type="submit">Registrar desligamento</button>
-            </div>
-          </form>
-        </Card>
+  
 
-        <Card title="Desligamentos registrados" subtitle="Histórico dos desligamentos e processos de justa causa.">
-          <div className="list">
-            {terminations.length === 0 ? (
-              <EmptyState title="Nenhum desligamento" text="Os desligamentos registrados aparecerão aqui." />
-            ) : terminations.map((item) => {
-              const process = processes.find((proc) => proc.id === item.processId);
-              const hypothesis = JUST_CAUSE_OPTIONS.find((opt) => opt.key === item.hipotese);
-              return (
-                <div className="list-item vertical" key={item.id}>
-                  <div className="process-top">
-                    <div>
-                      <strong>{item.funcionarioNome}</strong>
-                      <p>{item.tipo === "dispensa_ordinaria" ? "Dispensa ordinária" : item.tipo === "pedido_demissao" ? "Pedido de demissão" : "Justa causa"}</p>
-                    </div>
-                    <div className="inline-actions">
-                      <Badge tone={item.status === "Concluído" ? "muted" : "warning"}>{item.status}</Badge>
-                      {(item.tipo === "dispensa_ordinaria" || item.tipo === "pedido_demissao") ? (
-                        <button className="btn secondary mini" onClick={() => printTerminationEstimateReport(item, employeeMap[item.funcionarioId])}>Gerar estimativa PDF</button>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="detail-inline">
-                    <span>Data: {formatDate(item.data)}</span>
-                    {item.hipotese ? <span title={hypothesis?.help || ""}>Hipótese: {hypothesis?.label || "-"}</span> : null}
-                    {process ? <span>Processo: {process.numero}</span> : null}
-                  </div>
-                  <p className="detail-text">{item.sintese || item.motivo || "Sem observações."}</p>
-                  {renderAttachmentBlock("termination", item.id, "Documentos do desligamento", "Documento do desligamento")}
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      </section>
-    );
-  }
 
-  function renderReports() {
-    const employeesWithAlert = normalizedEmployees.filter((item) => inssByEmployee[item.id]?.shouldRefer);
-    return (
-      <section className="two-col">
-        <Card title="Indicadores gerenciais" subtitle="Visão consolidada da operação local.">
-          <div className="list">
-            <div className="list-item"><strong>Total de funcionários</strong><Badge>{normalizedEmployees.length}</Badge></div>
-            <div className="list-item"><strong>Funcionários afastados</strong><Badge tone="warning">{normalizedEmployees.filter((item) => item.status === "Afastado").length}</Badge></div>
-            <div className="list-item"><strong>Funcionários suspensos</strong><Badge tone="danger">{normalizedEmployees.filter((item) => item.status === "Suspenso").length}</Badge></div>
-            <div className="list-item"><strong>Alertas INSS</strong><Badge tone="danger">{employeesWithAlert.length}</Badge></div>
-          </div>
-        </Card>
+  
 
-        <Card title="Pendências previdenciárias" subtitle="Sinalização operacional para RH.">
-          {employeesWithAlert.length === 0 ? (
-            <EmptyState title="Nenhum alerta" text="Não há casos sinalizados para encaminhamento ao INSS." />
-          ) : (
-            <div className="list">
-              {employeesWithAlert.map((employee) => (
-                <div className="list-item vertical" key={employee.id}>
-                  <div className="process-top">
-                    <strong>{employee.nome}</strong>
-                    <Badge tone="danger">Encaminhar</Badge>
-                  </div>
-                  <p>{inssByEmployee[employee.id].message}</p>
-                  <small>Dias afastado acumulados: {employee.diasAfastamento || 0}</small>
-                </div>
-              ))}
-            </div>
-          )}
-        </Card>
 
-        <Card title="Processos por setor" subtitle="Consolidação das atribuições e da fila de despacho.">
-          <div className="list compact-list">
-            <div className="list-item"><strong>RH</strong><Badge>{assignedBySectorCounts["RH"]}</Badge><small>Aguardando despacho: {awaitingDispatchBySectorCounts["RH"]}</small></div>
-            <div className="list-item"><strong>Jurídico</strong><Badge>{assignedBySectorCounts["Jurídico"]}</Badge><small>Aguardando despacho: {awaitingDispatchBySectorCounts["Jurídico"]}</small></div>
-            <div className="list-item"><strong>Gestão</strong><Badge>{assignedBySectorCounts["Gestão"]}</Badge><small>Aguardando despacho: {awaitingDispatchBySectorCounts["Gestão"]}</small></div>
-          </div>
-        </Card>
-      </section>
-    );
-  }
+  
+
+
+  const pageProps = {
+    getProfilePermissions,
+    getUserPermissions,
+    getVisibleMenuForUser,
+    getMovementOptionsForUser,
+    actorLabel,
+    getQueueTargetForProfile,
+    queueTargetLabel,
+    formatDate,
+    parseDate,
+    calculateINSSAlert,
+    getStatusTone,
+    getCriticalityTone,
+    getCriticalityLabel,
+    Badge,
+    Card,
+    EmptyState,
+    DetailSection,
+    MiniDonut,
+    STORAGE_KEYS,
+    API_BASE,
+    STATUS_OPTIONS,
+    DEPARTMENTS,
+    OCCURRENCE_TYPES,
+    PROCESS_STATUS,
+    MENU,
+    JUST_CAUSE_OPTIONS,
+    DOCUMENT_ACCEPT,
+    defaultUsers,
+    PROFILE_OPTIONS,
+    defaultEmployees,
+    defaultOccurrences,
+    defaultProcesses,
+    loadStorage,
+    ensureArray,
+    nowBr,
+    daysBetween,
+    activePage,
+    employees,
+    occurrences,
+    processes,
+    selectedProcessId,
+    users,
+    session,
+    authUser,
+    loginForm,
+    passwordChangeForm,
+    loginError,
+    showLoginPassword,
+    userForm,
+    showUserPassword,
+    editingPermissionsId,
+    documentDraft,
+    backendRevision,
+    backendUpdatedAt,
+    syncNotice,
+    remoteReady,
+    syncTimeoutRef,
+    pollIntervalRef,
+    skipNextSyncRef,
+    expandedEmployeeIds,
+    employeeDetailTabs,
+    expandedOccurrenceIds,
+    expandedProcessIds,
+    employeeSearch,
+    occurrenceSearch,
+    processSearch,
+    employeeStatusFilter,
+    occurrenceTypeFilter,
+    processBoardView,
+    employeeSortOrder,
+    standardDocSelection,
+    employeeEditingId,
+    showEmployeeForm,
+    employeeForm,
+    occurrenceForm,
+    attachments,
+    previewAttachment,
+    movementAttachmentDrafts,
+    attachmentLinkDrafts,
+    processAssignmentDrafts,
+    terminationForm,
+    terminations,
+    quickEventDrafts,
+    movementType,
+    movementText,
+    decisionConclusion,
+    decisionResult,
+    decisionToken,
+    hrConclusion,
+    hrToken,
+    dispatchConclusion,
+    terminationToken,
+    movementOpenSectorDeadline,
+    movementDeadlineDays,
+    normalizedEmployees,
+    employeeMap,
+    processMapByOccurrence,
+    selectedProcess,
+    safeUsers,
+    currentUser,
+    currentPermissions,
+    visibleMenu,
+    movementOptions,
+    inssByEmployee,
+    totalEmployees,
+    totalAway,
+    totalSusp,
+    stats,
+    processCounts,
+    filteredEmployees,
+    filteredOccurrences,
+    filteredProcesses,
+    processSummary,
+    myQueueTarget,
+    myDispatchQueue,
+    assignedBySectorCounts,
+    awaitingDispatchBySectorCounts,
+    toggleExpanded,
+    lookupCep,
+    resetEmployeeForm,
+    startEmployeeEdit,
+    handleEmployeeSubmit,
+    handleEmployeeDelete,
+    handleEmployeeStatusChange,
+    applyOccurrenceEffects,
+    isToday,
+    validateManagerToken,
+    requireValidToken,
+    recalculateEmployeeStatus,
+    appendOccurrenceEvent,
+    appendProcessMovement,
+    attachRecordsToMovement,
+    queueMovementAttachment,
+    removeMovementDraftAttachment,
+    getMovementAttachments,
+    linkAttachmentToMovement,
+    syncOccurrenceToLinkedProcess,
+    syncProcessToLinkedOccurrence,
+    buildOccurrenceTimeline,
+    handleOccurrenceSubmit,
+    addOccurrenceTimeline,
+    quickRegisterOccurrenceEvent,
+    concludeOccurrence,
+    deleteOccurrence,
+    saveProcessAssignment,
+    updateSelectedProcess,
+    addProcessMovement,
+    computeDeadlineFromNow,
+    startResponseWindow,
+    startSectorDeadline,
+    clearResponseWindow,
+    isMovementExpectedForPending,
+    applyWorkflowAfterMovement,
+    canLaunchMovement,
+    addMovement,
+    archiveOccurrence,
+    unarchiveOccurrence,
+    unarchiveProcess,
+    closeProcess,
+    archiveProcess,
+    deleteProcess,
+    printOccurrenceReport,
+    getAttachments,
+    handleUploadAttachment,
+    removeAttachment,
+    downloadAttachment,
+    currentJustCauseHelp,
+    handleTerminationSubmit,
+    renderAttachmentBlock,
+    renderProcessAttachmentBlock,
+    resetDemoData,
+    fetchBootstrap,
+    pushSnapshot,
+    handleLogin,
+    handleLogout,
+    renderLogin,
+    getOccurrenceByProcess,
+    generateStandardDocumentText,
+    standardDocumentOptions,
+    generateStandardDocument,
+    handleCreateUser,
+    deleteUser,
+    toggleUserActive,
+    updateUserAccess,
+    updateUserPermission,
+    handleFirstPasswordChange,
+    getDocumentTitle,
+    openStandardDocumentEditor,
+    printDocumentDraft,
+    renderOccurrenceSpecificFields,
+    calculateTerminationEstimate,
+    printTerminationEstimateReport,
+  };
 
   function renderContent() {
-    if (activePage === "Funcionários") return renderEmployees();
-    if (activePage === "Ocorrências") return renderOccurrences();
-    if (activePage === "Processos Internos") return renderProcesses();
-    if (activePage === "Desligamentos") return renderTerminations();
+    if (activePage === "Funcionários") return <EmployeesPage {...pageProps} />;
+    if (activePage === "Ocorrências") return <OccurrencesPage {...pageProps} />;
+    if (activePage === "Processos Internos") return <ProcessesPage {...pageProps} />;
+    if (activePage === "Desligamentos") return <TerminationsPage {...pageProps} />;
     if (activePage === "Painel Gerencial") return (
       <>
-        {renderUsersPanel()}
-        {renderReports()}
+        <UsersPanelPage {...pageProps} />
+        <ReportsPage {...pageProps} />
       </>
     );
-    return renderDashboard();
+    return <DashboardPage {...pageProps} />;
   }
+
 
   if (!currentUser) {
     return renderLogin();
@@ -3864,11 +2741,11 @@ function renderOccurrenceSpecificFields() {
       ) : null}
       <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand">
-          <div className="brand-mark">G</div>
+        <div className="brand brand-with-logo">
+          <img src={BRANDING.logoPath} alt={BRANDING.appName} className="brand-logo sidebar-logo" />
           <div>
-            <strong>Glink Process</strong>
-            <span>Gestão administrativa interna</span>
+            <strong>{BRANDING.appName}</strong>
+            <span>{BRANDING.sidebarSubtitle}</span>
           </div>
         </div>
 
@@ -3886,7 +2763,7 @@ function renderOccurrenceSpecificFields() {
         </div>
 
         {currentUser?.perfil === "Administrador" ? (
-          <button className="btn secondary full-btn" onClick={resetDemoData}>Restaurar demo</button>
+          <button className="btn secondary full-btn" onClick={resetDemoData}>Resetar demonstração</button>
         ) : null}
         <button className="btn ghost full-btn" onClick={handleLogout}>Sair</button>
       </aside>

@@ -1,4 +1,5 @@
 import React from "react";
+import { DEMO_MODE } from "../config/demo.js";
 
 export default function DashboardPage(props) {
   const {

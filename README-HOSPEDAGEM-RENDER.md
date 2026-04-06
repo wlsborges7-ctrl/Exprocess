@@ -43,3 +43,7 @@ npm run render:start
   - ReportsPage
 - renderização central migrada para componentes de página
 - objetivo: preparar roteamento real, components e services na próxima etapa
+
+
+## v3.0.1 correção de runtime
+- corrigida referência a `DEMO_MODE` na `DashboardPage`

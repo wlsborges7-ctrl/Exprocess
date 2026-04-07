@@ -1,6 +1,6 @@
 {
   "name": "exceprocess-demo",
-  "version": "3.1.0-refactor-phase2",
+  "version": "3.1.1-refactor-phase2",
   "private": true,
   "type": "module",
   "scripts": {

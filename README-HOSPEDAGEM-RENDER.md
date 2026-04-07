@@ -61,3 +61,7 @@ npm run render:start
   - AppShell
 - páginas passam a importar os componentes comuns diretamente
 - App.jsx deixa de concentrar render de login, sidebar e shell principal
+
+
+## v3.1.1 correção de runtime
+- removida referência residual a `renderLogin` no `pageProps`

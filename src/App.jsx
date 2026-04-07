@@ -2513,7 +2513,6 @@ function renderOccurrenceSpecificFields() {
     pushSnapshot,
     handleLogin,
     handleLogout,
-    renderLogin,
     getOccurrenceByProcess,
     generateStandardDocumentText,
     standardDocumentOptions,

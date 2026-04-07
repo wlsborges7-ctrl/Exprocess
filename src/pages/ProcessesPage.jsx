@@ -1,4 +1,8 @@
 import React from "react";
+import Card from "../components/common/Card.jsx";
+import EmptyState from "../components/common/EmptyState.jsx";
+import DetailSection from "../components/common/DetailSection.jsx";
+import MiniDonut from "../components/common/MiniDonut.jsx";
 
 export default function ProcessesPage(props) {
   const {
@@ -16,10 +20,6 @@ export default function ProcessesPage(props) {
     getCriticalityTone,
     getCriticalityLabel,
     Badge,
-    Card,
-    EmptyState,
-    DetailSection,
-    MiniDonut,
     STORAGE_KEYS,
     API_BASE,
     STATUS_OPTIONS,

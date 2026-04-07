@@ -2,6 +2,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BRANDING } from "./config/branding.js";
 import { DEMO_MODE } from "./config/demo.js";
+import LoginScreen from "./components/layout/LoginScreen.jsx";
+import AppSidebar from "./components/layout/AppSidebar.jsx";
+import AppShell from "./components/layout/AppShell.jsx";
+import EmptyState from "./components/common/EmptyState.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import EmployeesPage from "./pages/EmployeesPage.jsx";
 import OccurrencesPage from "./pages/OccurrencesPage.jsx";
@@ -265,64 +269,6 @@ function getCriticalityLabel(classificacao) {
 
 function Badge({ children, tone = "default" }) {
   return <span className={`badge ${tone}`}>{children}</span>;
-}
-
-function Card({ title, subtitle, action, children }) {
-  return (
-    <section className="card">
-      <div className="card-header">
-        <div>
-          <h2>{title}</h2>
-          {subtitle ? <p>{subtitle}</p> : null}
-        </div>
-        {action || null}
-      </div>
-      {children}
-    </section>
-  );
-}
-
-function EmptyState({ title, text }) {
-  return (
-    <div className="empty-state">
-      <strong>{title}</strong>
-      <p>{text}</p>
-    </div>
-  );
-}
-
-function DetailSection({ title, subtitle, children, action }) {
-  return (
-    <div className="detail-section">
-      <div className="detail-section-header">
-        <div>
-          <h4>{title}</h4>
-          {subtitle ? <p>{subtitle}</p> : null}
-        </div>
-        {action || null}
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function MiniDonut({ value, total, label }) {
-  const percent = total > 0 ? Math.round((value / total) * 100) : 0;
-  const radius = 22;
-  const circumference = 2 * Math.PI * radius;
-  const dash = circumference * percent / 100;
-  return (
-    <div className="donut-wrap">
-      <svg viewBox="0 0 64 64" className="donut">
-        <circle cx="32" cy="32" r={radius} className="donut-bg"></circle>
-        <circle cx="32" cy="32" r={radius} className="donut-fg" strokeDasharray={`${dash} ${circumference - dash}`}></circle>
-      </svg>
-      <div className="donut-text">
-        <strong>{value}/{total}</strong>
-        <span>{label}</span>
-      </div>
-    </div>
-  );
 }
 
 export default function App() {
@@ -1905,36 +1851,7 @@ async function pushSnapshot() {
     clearInterval(pollIntervalRef.current);
   }
 
-  function renderLogin() {
-    return (
-      <div className="login-screen">
-        <div className="login-card">
-          <div className="login-brand brand-with-logo">
-            <img src={BRANDING.logoPath} alt={BRANDING.appName} className="brand-logo login-logo" />
-            <div>
-              <strong>{BRANDING.appName}</strong>
-              <span>{BRANDING.loginSubtitle}</span>
-            </div>
-          </div>
-          <h1>Entrar no sistema</h1>
-          <p>{BRANDING.internalAccessText}</p>
-          <form className="login-form" onSubmit={handleLogin}>
-            <input placeholder="Usuário" value={loginForm.usuario} onChange={(e) => setLoginForm({ ...loginForm, usuario: e.target.value })} />
-            <div className="password-wrap">
-              <input type={showLoginPassword ? "text" : "password"} placeholder="Senha" value={loginForm.senha} onChange={(e) => setLoginForm({ ...loginForm, senha: e.target.value })} />
-              <button type="button" className="eye-btn" onClick={() => setShowLoginPassword((v) => !v)}>
-                {showLoginPassword ? "Ocultar" : "Mostrar"}
-              </button>
-            </div>
-            {loginError ? <div className="login-error">{loginError}</div> : null}
-            <button className="btn primary full-btn" type="submit">Entrar</button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
-
+  
   function getOccurrenceByProcess(process) {
     return occurrences.find((item) => item.id === process.occurrenceId);
   }
@@ -2439,10 +2356,6 @@ function renderOccurrenceSpecificFields() {
     getCriticalityTone,
     getCriticalityLabel,
     Badge,
-    Card,
-    EmptyState,
-    DetailSection,
-    MiniDonut,
     STORAGE_KEYS,
     API_BASE,
     STATUS_OPTIONS,
@@ -2635,7 +2548,17 @@ function renderOccurrenceSpecificFields() {
 
 
   if (!currentUser) {
-    return renderLogin();
+    return (
+      <LoginScreen
+        branding={BRANDING}
+        loginForm={loginForm}
+        setLoginForm={setLoginForm}
+        showLoginPassword={showLoginPassword}
+        setShowLoginPassword={setShowLoginPassword}
+        loginError={loginError}
+        handleLogin={handleLogin}
+      />
+    );
   }
 
   return (
@@ -2739,37 +2662,21 @@ function renderOccurrenceSpecificFields() {
           </div>
         </div>
       ) : null}
-      <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand brand-with-logo">
-          <img src={BRANDING.logoPath} alt={BRANDING.appName} className="brand-logo sidebar-logo" />
-          <div>
-            <strong>{BRANDING.appName}</strong>
-            <span>{BRANDING.sidebarSubtitle}</span>
-          </div>
-        </div>
-
-        <nav className="menu">
-          {visibleMenu.map((item) => (
-            <button key={item} className={`menu-item ${activePage === item ? "active" : ""}`} onClick={() => setActivePage(item)}>
-              {item}
-            </button>
-          ))}
-        </nav>
-
-        <div className="sidebar-box">
-          <h3>Usuário logado</h3>
-          <p><strong>{currentUser?.nome}</strong><br />{currentUser?.perfil}</p>
-        </div>
-
-        {currentUser?.perfil === "Administrador" ? (
-          <button className="btn secondary full-btn" onClick={resetDemoData}>Resetar demonstração</button>
-        ) : null}
-        <button className="btn ghost full-btn" onClick={handleLogout}>Sair</button>
-      </aside>
-
-      <main className="content">{renderContent()}</main>
-      </div>
+            <AppShell
+        sidebar={
+          <AppSidebar
+            branding={BRANDING}
+            visibleMenu={visibleMenu}
+            activePage={activePage}
+            setActivePage={setActivePage}
+            currentUser={currentUser}
+            resetDemoData={resetDemoData}
+            handleLogout={handleLogout}
+          />
+        }
+      >
+        {renderContent()}
+      </AppShell>
     </>
   );
 }

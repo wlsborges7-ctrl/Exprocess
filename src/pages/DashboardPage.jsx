@@ -1,4 +1,8 @@
 import React from "react";
+import Card from "../components/common/Card.jsx";
+import EmptyState from "../components/common/EmptyState.jsx";
+import DetailSection from "../components/common/DetailSection.jsx";
+import MiniDonut from "../components/common/MiniDonut.jsx";
 import { DEMO_MODE } from "../config/demo.js";
 
 export default function DashboardPage(props) {
@@ -17,10 +21,6 @@ export default function DashboardPage(props) {
     getCriticalityTone,
     getCriticalityLabel,
     Badge,
-    Card,
-    EmptyState,
-    DetailSection,
-    MiniDonut,
     STORAGE_KEYS,
     API_BASE,
     STATUS_OPTIONS,

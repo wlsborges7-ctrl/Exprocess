@@ -47,3 +47,17 @@ npm run render:start
 
 ## v3.0.1 correção de runtime
 - corrigida referência a `DEMO_MODE` na `DashboardPage`
+
+
+## v3.1.0 fase 2 da refatoração
+- extraídos componentes comuns:
+  - Card
+  - EmptyState
+  - DetailSection
+  - MiniDonut
+- extraído layout:
+  - LoginScreen
+  - AppSidebar
+  - AppShell
+- páginas passam a importar os componentes comuns diretamente
+- App.jsx deixa de concentrar render de login, sidebar e shell principal
